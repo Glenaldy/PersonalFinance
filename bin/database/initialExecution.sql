@@ -1,0 +1,3 @@
+DROP TABLE IF EXISTS transactions;
+
+CREATE TABLE transactions (id INTEGER PRIMARY KEY, amount INTEGER);
