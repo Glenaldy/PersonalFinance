@@ -15,6 +15,8 @@ public class App {
         // READ
         db.selectFrom("transactions");
 
+        System.out.printf("Hello, welcome to the Personal Finance\n What woudl you like to do?\n");
+        System.out.println("[1] Insert new Stu");
     }
 
     private static void createOpenDB(Connection connection, Statement statement, String PATH) {
