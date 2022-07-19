@@ -8,8 +8,10 @@ CREATE TABLE transactions(
     category STRING,
     description STRING,
     trans_date DATE,
-	super_id INTEGER,
-	FOREIGN KEY (super_id) REFERENCES transactions(id)
+	parent_id INTEGER,
+    critical BOOLEAN DEFAULT false,
+    paid BOOLEAN DEFAULT true,
+	FOREIGN KEY (parent_id) REFERENCES transactions(id)
 );
 
 INSERT INTO
@@ -26,8 +28,16 @@ VALUES
         1,
         "yen",
         5000,
-        "supermarket",
-        "super transaction",
+        "conbini",
+        "parent transaction",
+        "2022/07/18"
+    ),
+    (
+        2,
+        "yen",
+        5000,
+        "another conbini",
+        "parent transaction",
         "2022/07/18"
     );
 	
@@ -39,65 +49,48 @@ INSERT INTO
         category,
         description,
         trans_date,
-		super_id
+		parent_id
     )
 VALUES
     (
         "yen",
         1000,
-        "supermarket",
-        "sub transaction",
+        "conbini",
+        "child transaction",
         "2022/07/18",
 		1
     ),
     (
         "yen",
         1000,
-        "supermarket",
-        "sub transaction",
+        "conbini",
+        "child transaction",
+        "2022/07/18",
+		2
+    ),
+    (
+        "yen",
+        1000,
+        "conbini",
+        "child transaction",
         "2022/07/18",
 		1
     ),
     (
         "yen",
         1000,
-        "supermarket",
-        "sub transaction",
+        "conbini",
+        "child transaction",
         "2022/07/18",
-		1
+		2
     ),
-    (
+	(
         "yen",
         1000,
-        "supermarket",
-        "sub transaction",
+        "conbini",
+        "child transaction",
         "2022/07/18",
-		1
-    )	
+		2
+    )
 	;
 	
-SELECT super.id AS super_transaction, super.amount AS total, sum(sub.amount) AS sub_transaction_total
-FROM transactions AS super 
-JOIN transactions AS sub 
-ON super.id = sub.super_id
-GROUP BY super.id;
-
-SELECT super.id AS parent_id, 
-	COUNT(sub.id) AS count_sub_transaction, 
-	super.amount AS parent_total_transaction,
-	SUM(sub.amount) AS child_total_transaction,
-	(super.amount - SUM(sub.amount)) AS unlabeled_amount
-FROM transactions AS super 
-JOIN transactions AS sub 
-ON super.id = sub.super_id;
-
-
-
-
-
-
-
-
-
-
-
