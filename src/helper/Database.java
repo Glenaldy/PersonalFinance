@@ -1,10 +1,11 @@
+package helper;
 import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
-class Database {
+public class Database {
     Connection connection;
     Statement statement;
 

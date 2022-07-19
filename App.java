@@ -1,8 +1,12 @@
 import java.sql.*;
 
+import helper.Database;
+import helper.ScriptRunner;
+
 public class App {
     public static void main(String[] args) throws Exception {
-        final String PATH = "D:/School/1_KCGI/2022 Spring/Object Oriented Programming/Programming/jp/kcgi/twentytwo/spring/oop/PersonalFinance";
+       System.out.println(( System.getenv()));
+        final String PATH = "C:/Users/Glenaldy/Documents/School/OOP/PersonalFinance";
         String jdbcUrl = "jdbc:sqlite:";
         String database = "database/personalfinance.db";
 

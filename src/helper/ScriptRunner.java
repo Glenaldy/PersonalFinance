@@ -1,9 +1,10 @@
+package helper;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-class ScriptRunner {
+public class ScriptRunner {
     public static String runScript(String path) {
         String line;
         StringBuffer sql = new StringBuffer();
