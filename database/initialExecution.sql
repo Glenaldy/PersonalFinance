@@ -7,7 +7,7 @@ CREATE TABLE transactions(
     amount INTEGER NOT NULL,
     category STRING,
     description STRING,
-    transDate DATE,
+    trans_date DATE,
 	super_id INTEGER,
 	FOREIGN KEY (super_id) REFERENCES transactions(id)
 );
@@ -19,7 +19,7 @@ INSERT INTO
         amount,
         category,
         description,
-        transDate
+        trans_date
     )
 VALUES
     (
@@ -38,7 +38,7 @@ INSERT INTO
         amount,
         category,
         description,
-        transDate,
+        trans_date,
 		super_id
     )
 VALUES

@@ -1,26 +1,27 @@
 import java.util.Scanner;
 
 class Transaction {
-    String category,
-            description,
-            date;
+    Integer id;
+    String currency;
     Integer amount;
+    String category;
+    String description;
+    String transDate;
+    Integer superId;
 
-    public Transaction(Integer amount, String category, String description, String date) {
+    public Transaction(Integer id, String currency, Integer amount, String category, String description,
+            String transDate, Integer superId) {
+        this.id = id;
+        this.currency = currency;
         this.amount = amount;
         this.category = category;
         this.description = description;
-        this.date = date;
-        // if (transaction[3].length() == 0) {
-        // this.date =
-        // LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
-        // }
-
-        // System.out.printf("%d %s %s\n", this.amount, this.category, this.date);
+        this.transDate = transDate;
+        this.superId = superId;
     }
 
     public String[] getTransaction() {
-        return new String[] { Integer.toString(amount), category, description, date };
+        return new String[] {};
     }
 
     private String[] scanTransaction() {
