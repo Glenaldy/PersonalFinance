@@ -1,4 +1,3 @@
-import java.sql.*;
 import java.util.ArrayList;
 
 public class App {
@@ -13,26 +12,15 @@ public class App {
         // READ
 
         // Give me all the transaction
-        ArrayList<Transaction> getParent = db.selectFrom("transactions", "");
+        ArrayList<Transaction> getParent = db.selectAll("transactions");
 
         System.out.println(getParent);
 
-    }
+        String[] test1 = { "yen", "-5000", "conbini", "bought this today", "2022/07/19" };
+        // ScannerInput.ScanTransaction()
+        // yen, -5000, conbini, bought this today, 2022/07/19
+        db.insertIntoTransaction(test1);
 
-    // private static void createOpenDB(Connection connection, Statement statement,
-    // String PATH) {
-    // try {
-    // String selectStatement = "SELECT * FROM transactions;";
-    // try {
-    // statement.executeQuery(selectStatement);
-    // System.out.printf("Database already exists.\nAccessing...\n");
-    // } catch (Exception e) {
-    // System.out.printf("Database doesn't exist, creating database...\n");
-    // String sql = ScriptRunner.runScript(PATH + "/database/initialExecution.sql");
-    // statement.executeUpdate(sql);
-    // }
-    // } catch (SQLException e) {
-    // System.out.println("SQL Command Error" + e.getMessage());
-    // }
-    // }
+        System.out.println();
+    }
 }

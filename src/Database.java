@@ -2,13 +2,7 @@
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import javax.print.DocFlavor.STRING;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class Database {
     private Connection connection;
@@ -21,35 +15,45 @@ public class Database {
         createOpenDB(connection, statement, path);
     }
 
-    public ArrayList<Transaction> selectFrom(String table, String argument) throws SQLException {
+    public ArrayList<Transaction> selectAll(String table, String argument) throws SQLException {
         ArrayList<Transaction> collection = new ArrayList<>();
         String sql = String.format("SELECT * FROM %s;", table);
         ResultSet result = statement.executeQuery(sql);
-        ResultSetMetaData metadata = result.getMetaData();
-        int columnCount = metadata.getColumnCount();
-
         while (result.next()) {
             Integer id = result.getInt("id");
             String currency = result.getString("currency");
             Integer amount = result.getInt("id");
             String category = result.getString("category");
             String description = result.getString("description");
-            String transDate = result.getString("transDate");
+            String transDate = result.getString("trans_date");
             Integer superId = result.getInt("super_id");
 
             Transaction transaction = new Transaction(id, currency, amount, category, description, transDate, superId);
 
             collection.add(transaction);
-            // for (int i = 1; i <= columnCount; i++) {
-            // String columnName = metadata.getColumnName(i);
-
-            // }
         }
         return collection;
     }
 
-    public ArrayList<Transaction> selectFrom(String table) throws SQLException {
-        return selectFrom(table, "");
+    public ArrayList<Transaction> selectAll(String table) throws SQLException {
+        return selectAll(table, "");
+    }
+
+    public void insertIntoTransaction(String[] input) throws SQLException {
+        String table = "transactions";
+        String sql = String.format(
+                "INSERT INTO %s (currency, amount, category, description, trans_date) VALUES (?, ?, ?, ?, ?);", table);
+
+        PreparedStatement prepSql = connection.prepareStatement(sql);
+
+        prepSql.setString(1, input[0].trim());
+        prepSql.setString(2, input[1].trim());
+        prepSql.setString(3, input[2].trim());
+        prepSql.setString(4, input[3].trim());
+        prepSql.setString(5, input[4].trim());
+
+        prepSql.executeUpdate();
+        prepSql.close();
     }
 
     private static void createOpenDB(Connection connection, Statement statement, String PATH) {
