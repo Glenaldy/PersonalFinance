@@ -18,11 +18,7 @@ public class App {
         String[] test1 = { "-5000", "conbini" };
 
         // { "2020/01/01", "-5000", "conbini", "bought this today" }
-        // ScannerInput.scanTransaction()
-        // yen, -5000, conbini, bought this today, 2022/07/19
-        // 2022/07/19, -5000, conbini, desc
         // int i = db.insertIntoTransaction(test1);
-        // System.out.println("TEST 1\t Inserting into id " + i);
         Transaction transactionA = db.insertTransaction(ScannerInput.sanitizeInputIntoTransaction(test1, environment));
 
         System.out.println("Insert successful");
@@ -30,12 +26,17 @@ public class App {
                 transactionA.category
                 + transactionA.description + transactionA.superId + transactionA.critical);
 
-        // INSERT INTO PARENT CHILD
-        // yen, -5000, conbini, desc, 2022/07/19 > -3000, bread > -2000, milk
-        // String[] test2 = ScannerInput.scanTransactionParent();
-        // for (String string : test2) {
-        // System.out.println(string);
-        // }
+        String[][] test2 = { { "-5000", "conbini", "desc" }, { "-3000", "bread" }, { "-2000", "milk" } };
+
+        ArrayList<Transaction> set = ScannerInput.parentChildInput(test2, environment);
+        Transaction insertTest2 = db.insertTransaction(set.get(0));
+        System.out.println(insertTest2.id);
+        for (int i = 1; i < set.size(); i++) {
+            set.get(i).superId = insertTest2.id;
+            db.insertTransaction(set.get(i));
+        }
+        TransactionPrinter.printParentChild(insertTest2, db.getTransactionChild(insertTest2));
+        System.out.println("SUCCESS");
 
         // GET TRANSACTION FROM ID = Transaction
         Transaction testTran1 = db.getTransactionFromId(2);

@@ -43,7 +43,8 @@ public class Database {
     public Transaction insertTransaction(Transaction inputTransaction) throws SQLException {
         String table = "transactions";
         String sql = String.format(
-                "INSERT INTO %s (currency, amount, category, description, trans_date) VALUES (?, ?, ?, ?, ?);", table);
+                "INSERT INTO %s (currency, amount, category, description, trans_date, parent_id) VALUES (?, ?, ?, ?, ?, ?);",
+                table);
 
         PreparedStatement prepSql = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
@@ -52,6 +53,12 @@ public class Database {
         prepSql.setString(3, inputTransaction.category);
         prepSql.setString(4, inputTransaction.description);
         prepSql.setString(5, inputTransaction.transDate);
+
+        if (inputTransaction.superId == null) {
+            prepSql.setString(6, "");
+        } else {
+            prepSql.setInt(6, inputTransaction.superId);
+        }
 
         if (prepSql.executeUpdate() == 0) {
             throw new SQLException("Inserting transaction failed.");

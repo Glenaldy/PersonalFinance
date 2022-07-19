@@ -1,4 +1,5 @@
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ScannerInput {
@@ -20,7 +21,18 @@ public class ScannerInput {
         return input;
     }
 
-    public static Transaction sanitizeInputIntoTransaction(String[] dirtyStringArray, String[] environment) {
+    public static ArrayList<Transaction> parentChildInput(String[][] parentChild, String[] environment) {
+        ArrayList<Transaction> transactions = new ArrayList<>();
+        Transaction parent = sanitizeInputIntoTransaction(parentChild[0], environment);
+        transactions.add(parent);
+        for (int i = 1; i < parentChild.length; i++) {
+            transactions.add(sanitizeInputIntoTransaction(parentChild[i], environment, parent));
+        }
+        return transactions;
+    }
+
+    public static Transaction sanitizeInputIntoTransaction(String[] dirtyStringArray, String[] environment,
+            Transaction parent) {
         String keyWord = "--hint";
 
         Integer id = null;
@@ -33,18 +45,6 @@ public class ScannerInput {
         Boolean critical = false; //
         Boolean paid = true; //
 
-        // [0]2022/07/19
-        // [1]-5000
-        // [2]conbini
-        // [3]desc
-
-        // [0]-5000
-        // [1]conbini
-
-        // [0]"2020/01/01"
-        // [1]"-5000"
-        // [2]"conbini"
-        // [3]"desc"
         if (dirtyStringArray[0].toLowerCase() == keyWord) {
             ;
         }
@@ -74,10 +74,21 @@ public class ScannerInput {
             amount = Integer.parseInt(dirtyStringArray[1]);
         }
 
+        if (parent != null) {
+            category = parent.category;
+            description = dirtyStringArray[1];
+            transDate = parent.transDate;
+        }
+
         Transaction transaction = new Transaction(
                 id, currency, amount, category, description, transDate, superId, critical, paid);
         return transaction;
 
+    }
+
+    public static Transaction sanitizeInputIntoTransaction(String[] dirtyStringArray,
+            String[] environment) {
+        return sanitizeInputIntoTransaction(dirtyStringArray, environment, null);
     }
 
     public static String[] scanTransactionParent() {
