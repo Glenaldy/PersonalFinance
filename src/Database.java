@@ -14,18 +14,35 @@ public class Database {
         createOpenDB(connection, statement, path);
     }
 
-    public int insertIntoTransaction(String[] input) throws SQLException {
+    public int insertSingleTransaction(Transaction transaction) throws SQLException {
         String table = "transactions";
         String sql = String.format(
-                "INSERT INTO %s (currency, amount, category, description, trans_date) VALUES (?, ?, ?, ?, ?);", table);
+                "INSERT INTO %s (currency, amount, category, description, trans_date, parent_id, critical, paid) VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
+                table);
 
         PreparedStatement prepSql = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
-        prepSql.setString(1, input[0].trim());
-        prepSql.setString(2, input[1].trim());
-        prepSql.setString(3, input[2].trim());
-        prepSql.setString(4, input[3].trim());
-        prepSql.setString(5, input[4].trim());
+        Integer amount = transaction.amount,
+                superId = transaction.superId;
+        String currency = transaction.currency,
+                category = transaction.category,
+                description = transaction.description,
+                transDate = transaction.transDate;
+        Boolean critical = transaction.critical,
+                paid = transaction.paid;
+
+        if (superId != null)
+            prepSql.setInt(6, transaction.superId);
+        else
+            prepSql.setNull(6, Types.INTEGER);
+
+        prepSql.setString(1, currency);
+        prepSql.setInt(2, amount);
+        prepSql.setString(3, category);
+        prepSql.setString(4, description);
+        prepSql.setString(5, transDate);
+        prepSql.setBoolean(7, critical);
+        prepSql.setBoolean(8, paid);
 
         if (prepSql.executeUpdate() == 0) {
             throw new SQLException("Inserting transaction failed.");
@@ -40,38 +57,18 @@ public class Database {
         }
     }
 
-    public Transaction insertTransaction(Transaction inputTransaction) throws SQLException {
-        String table = "transactions";
-        String sql = String.format(
-                "INSERT INTO %s (currency, amount, category, description, trans_date, parent_id) VALUES (?, ?, ?, ?, ?, ?);",
-                table);
-
-        PreparedStatement prepSql = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-
-        prepSql.setString(1, inputTransaction.currency);
-        prepSql.setInt(2, inputTransaction.amount);
-        prepSql.setString(3, inputTransaction.category);
-        prepSql.setString(4, inputTransaction.description);
-        prepSql.setString(5, inputTransaction.transDate);
-
-        if (inputTransaction.superId == null) {
-            prepSql.setString(6, "");
+    public Transaction insertTransaction(ArrayList<Transaction> inputTransactions) throws SQLException {
+        if (inputTransactions.size() == 1) {
+            int parentId = this.insertSingleTransaction(inputTransactions.get(0));
+            return this.getTransactionFromId(parentId);
         } else {
-            prepSql.setInt(6, inputTransaction.superId);
-        }
+            int parentId = this.insertSingleTransaction(inputTransactions.get(0));
 
-        if (prepSql.executeUpdate() == 0) {
-            throw new SQLException("Inserting transaction failed.");
-        }
-
-        try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-            if (generatedKeys.next()) {
-                inputTransaction.id = generatedKeys.getInt(1);
-
-                return inputTransaction;
-            } else {
-                throw new SQLException("Inserting transaction failed, no ID obtained.");
+            for (int i = 1; i < inputTransactions.size(); i++) {
+                inputTransactions.get(i).superId = parentId;
+                this.insertSingleTransaction(inputTransactions.get(i));
             }
+            return this.getTransactionFromId(parentId);
         }
     }
 
@@ -83,17 +80,6 @@ public class Database {
         ResultSet result = statement.executeQuery();
 
         while (result.next()) {
-            /*
-             * Integer id = result.getInt("id");
-             * String currency = result.getString("currency");
-             * Integer amount = result.getInt("amount");
-             * String category = result.getString("category");
-             * String description = result.getString("description");
-             * String transDate = result.getString("trans_date");
-             * Integer superId = result.getInt("parent_id");
-             * Boolean critical = result.getBoolean("critical");
-             * Boolean paid = result.getBoolean("paid");
-             */
             Transaction transaction = new Transaction(
                     result.getInt("id"),
                     result.getString("currency"),
@@ -139,7 +125,6 @@ public class Database {
             childSet.add(childTransaction);
         }
         return childSet;
-
     }
 
     // public ArrayList<Transaction> selectAll(String table, String argument) throws
@@ -169,42 +154,54 @@ public class Database {
     // return selectAll(table, "");
     // }
 
-    public void selectAllParent() {
-        String parentQuery = "SELECT parent.id AS parent_id, parent.category AS parent_category,parent.description AS parent_description,parent.amount AS parent_total_transaction, COUNT(child.id) AS count_child_transaction, (parent.amount - SUM(child.amount)) AS unlabeled_amount FROM transactions AS parent JOIN transactions AS child ON parent.id = child.parent_id WHERE parent.id = ? GROUP BY parent.id;";
+    // public void selectAllParent() {
+    // String parentQuery = "SELECT parent.id AS parent_id, parent.category AS
+    // parent_category,parent.description AS parent_description,parent.amount AS
+    // parent_total_transaction, COUNT(child.id) AS count_child_transaction,
+    // (parent.amount - SUM(child.amount)) AS unlabeled_amount FROM transactions AS
+    // parent JOIN transactions AS child ON parent.id = child.parent_id WHERE
+    // parent.id = ? GROUP BY parent.id;";
 
-        PreparedStatement prepSql = connection.prepareStatement(parentQuery, Statement.RETURN_GENERATED_KEYS);
-        prepSql.setInt(1, id);
-        ResultSet parentResult = prepSql.executeQuery();
+    // PreparedStatement prepSql = connection.prepareStatement(parentQuery,
+    // Statement.RETURN_GENERATED_KEYS);
+    // prepSql.setInt(1, id);
+    // ResultSet parentResult = prepSql.executeQuery();
 
-        while (parentResult.next()) {
-            System.out.println("reading transaction of " + id);
-            Integer parentId = parentResult.getInt("parent_id");
-            String parentCategory = parentResult.getString("parent_category");
-            String parentDescription = parentResult.getString("parent_description");
-            Integer parentTotalTransaction = parentResult.getInt("parent_total_transaction");
-            Integer countChildTransaction = parentResult.getInt("count_child_transaction");
-            Integer unlabeledAmount = parentResult.getInt("unlabeled_amount");
+    // while (parentResult.next()) {
+    // System.out.println("reading transaction of " + id);
+    // Integer parentId = parentResult.getInt("parent_id");
+    // String parentCategory = parentResult.getString("parent_category");
+    // String parentDescription = parentResult.getString("parent_description");
+    // Integer parentTotalTransaction =
+    // parentResult.getInt("parent_total_transaction");
+    // Integer countChildTransaction =
+    // parentResult.getInt("count_child_transaction");
+    // Integer unlabeledAmount = parentResult.getInt("unlabeled_amount");
 
-            System.out.printf("%s\t\t|\t%d\t|\t%s\t|\t%d\n", parentCategory, parentTotalTransaction, parentDescription,
-                    unlabeledAmount);
+    // System.out.printf("%s\t\t|\t%d\t|\t%s\t|\t%d\n", parentCategory,
+    // parentTotalTransaction, parentDescription,
+    // unlabeledAmount);
 
-            if (countChildTransaction > 0) {
-                String childQuery = String.format(
-                        "SELECT child.id AS child_id, child.amount AS child_transaction_amount, child.description AS child_description FROM transactions AS child WHERE parent_id = %d;",
-                        parentId);
-                ResultSet childResult = statement.executeQuery(childQuery);
+    // if (countChildTransaction > 0) {
+    // String childQuery = String.format(
+    // "SELECT child.id AS child_id, child.amount AS child_transaction_amount,
+    // child.description AS child_description FROM transactions AS child WHERE
+    // parent_id = %d;",
+    // parentId);
+    // ResultSet childResult = statement.executeQuery(childQuery);
 
-                while (childResult.next()) {
-                    Integer childID = childResult.getInt("child_id");
-                    Integer childTransactionAmount = childResult.getInt("child_transaction_amount");
-                    String childDescription = childResult.getString("child_description");
+    // while (childResult.next()) {
+    // Integer childID = childResult.getInt("child_id");
+    // Integer childTransactionAmount =
+    // childResult.getInt("child_transaction_amount");
+    // String childDescription = childResult.getString("child_description");
 
-                    System.out.printf("└─%s\t|\t%d\n", childDescription, childTransactionAmount);
-                }
-            }
-        }
+    // System.out.printf("└─%s\t|\t%d\n", childDescription, childTransactionAmount);
+    // }
+    // }
+    // }
 
-    }
+    // }
 
     private static void createOpenDB(Connection connection, Statement statement, String PATH) {
         try {
