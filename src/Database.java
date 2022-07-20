@@ -14,6 +14,43 @@ public class Database {
         createOpenDB(connection, statement, path);
     }
 
+    public ArrayList<Wallet> getWalletList(String currency) throws SQLException {
+        String sql = "SELECT * FROM wallets WHERE currency = ?;";
+
+        ArrayList<Wallet> wallets = new ArrayList<>();
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setString(1, currency);
+        ResultSet result = statement.executeQuery();
+        while (result.next()) {
+            Wallet wallet = new Wallet(
+                    result.getInt("id"),
+                    result.getString("currency"),
+                    result.getString("wallet_name"));
+            wallets.add(wallet);
+        }
+        return wallets;
+    }
+
+    public void insertIntoCurrency(String currency) throws SQLException {
+        String sql = "INSERT INTO currency (currency_name) VALUES(?)";
+        PreparedStatement prepSql = connection.prepareStatement(sql);
+        prepSql.setString(1, currency);
+        prepSql.executeUpdate();
+    }
+
+    public ArrayList<Currency> getCurrencyList() throws SQLException {
+        String sql = "SELECT * FROM currency;";
+
+        ArrayList<Currency> currencies = new ArrayList<>();
+        PreparedStatement statement = connection.prepareStatement(sql);
+        ResultSet result = statement.executeQuery();
+        while (result.next()) {
+            Currency currency = new Currency(result.getInt("id"), result.getString("currency_name"));
+            currencies.add(currency);
+        }
+        return currencies;
+    }
+
     public int insertSingleTransaction(Transaction transaction) throws SQLException {
         String table = "transactions";
         String sql = String.format(
@@ -58,6 +95,9 @@ public class Database {
     }
 
     public Transaction insertTransaction(ArrayList<Transaction> inputTransactions) throws SQLException {
+        if (inputTransactions.isEmpty()) {
+            throw new SQLException("Trying to input null transaction");
+        }
         if (inputTransactions.size() == 1) {
             int parentId = this.insertSingleTransaction(inputTransactions.get(0));
             return this.getTransactionFromId(parentId);
@@ -65,6 +105,9 @@ public class Database {
             int parentId = this.insertSingleTransaction(inputTransactions.get(0));
 
             for (int i = 1; i < inputTransactions.size(); i++) {
+                if (inputTransactions.get(i) == null) {
+                    throw new SQLException("Trying to input null transaction");
+                }
                 inputTransactions.get(i).superId = parentId;
                 this.insertSingleTransaction(inputTransactions.get(i));
             }

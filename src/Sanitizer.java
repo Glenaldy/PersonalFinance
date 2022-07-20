@@ -1,11 +1,33 @@
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 
 public class Sanitizer {
-    public static ArrayList<Transaction> dirtyArrayToTransactionList(String input) {
+    public static ArrayList<Transaction> dirtyArrayToTransactionList(String input) throws Exception {
+        // -5000, conbini, desc > -3000, bread
         ArrayList<String[]> dirtyArray = textToDirtyArray(input);
+        // {{"-5000", "conbini", "desc"}, {"-3000", "bread"}}
         ArrayList<Transaction> transactions = new ArrayList<>();
-        for (String[] transaction : dirtyArray) {
-            transactions.add(sanitizeInputIntoTransaction(transaction));
+
+        // Parent of transaction {"-5000", "conbini", "desc"}
+        Transaction parent = sanitizeInputArrayIntoTransaction(dirtyArray.get(0));
+        if (parent == null) {
+            throw new Exception();
+        } else {
+            transactions.add(parent);
+        }
+
+        // Child of transaction {"-3000", "bread"}
+        for (int i = 1; i < dirtyArray.size(); i++) {
+            if (dirtyArray.get(i) != null) {
+                Transaction child = sanitizeInputArrayIntoTransaction(dirtyArray.get(i), parent);
+                if (child == null) {
+                    throw new Exception();
+                }
+                transactions.add(child);
+            }
         }
         return transactions;
     }
@@ -29,50 +51,86 @@ public class Sanitizer {
         return output;
     }
 
-    public static Transaction sanitizeInputIntoTransaction(String[] dirtyStringArray) {
+    public static Transaction sanitizeInputArrayIntoTransaction(String[] dirtyStringArray, Transaction parent) {
+        // ex. {"-5000", "conbini", "desc"}
+        if (dirtyStringArray.length < 2) {
+            // Check if there's only one input ex. = "-5000"
+            return null;
+        }
+
         ArrayList<String> tempContainer = new ArrayList<>();
+        /* CHECK IF DATE STRING IS IN THE INPUT */
         try {
+            /* CHECK IF [0] NOT STRING */
             Integer.parseInt(dirtyStringArray[0]);
             tempContainer.add("");
-            for (String string : dirtyStringArray) {
-                tempContainer.add(string);
-            }
         } catch (Exception e) {
-            for (String string : dirtyStringArray) {
-                tempContainer.add(string);
-            }
+            /* IF [0] IS STRING DO NOTHING */
         }
-        Transaction output = createTransaction(tempContainer);
 
+        /* ADD EVERYTHING INTO THE temp */
+        for (String string : dirtyStringArray) {
+            tempContainer.add(string);
+        }
+        // ex. {"2022/07/20", "5000", "job1"}
+        /* ONLY FOR CHILD OBJECT */
+        if (parent != null) {
+            tempContainer.add(tempContainer.get(2));
+            tempContainer.set(2, parent.category);
+        }
+
+        /* VALIDATE DATE */
+        tempContainer.set(0,
+                validDate(tempContainer.get(0)) ? tempContainer.get(0) : GlobalEnvironmentVariable.getDateToday());
+
+        // ex. {"2022/07/20", "-5000", "conbini", "desc"}
+
+        Transaction output = createTransaction(tempContainer, parent);
         return output;
     }
 
-    public static Transaction createTransaction(ArrayList<String> container) {
-        Integer id = null;
+    private static Boolean validDate(String date) {
+        Boolean output = true;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+            Date convert = sdf.parse(date);
+            sdf.format(convert);
+        } catch (Exception x) {
+            output = false;
+        }
+        return output;
+    }
+
+    public static Transaction sanitizeInputArrayIntoTransaction(String[] dirtyStringArray) {
+        return sanitizeInputArrayIntoTransaction(dirtyStringArray, null);
+    }
+
+    public static Transaction createTransaction(ArrayList<String> container, Transaction parent) {
         String currency = GlobalEnvironmentVariable.currency;
+        Integer id = null;
         Integer amount = null;
         String category = null;
         String description = null;
         String transDate = container.get(0);
-        Integer superId = null;
         Boolean critical = false;
         Boolean paid = true;
+        Integer superId = null;
 
         /* Mandatory value */
-        amount = Integer.parseInt(container.get(1));
-        category = container.get(2);
+        amount = Integer.parseInt(container.get(1)); // -5000
+        category = container.get(2); // conbini
 
         /* Not Mandatory value (can be null) */
-        transDate = (transDate == null) ? container.get(0) : GlobalEnvironmentVariable.getDateToday();
+        /* DESCRIPTION CHECK */
         try {
+            // Check if there's description
             description = container.get(3);
         } catch (Exception e) {
-            ;
+            ; // Let it be null if there's none
         }
 
         Transaction transaction = new Transaction(id, currency, amount, category, description, transDate, superId,
                 critical, paid);
-
         return transaction;
     }
 }
