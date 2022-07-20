@@ -18,12 +18,6 @@ public class App {
         // test2Raw = "-3333, conbini";
         ArrayList<Transaction> test2 = Sanitizer.dirtyArrayToTransactionList(test2Raw);
         System.out.println("--------------");
-        for (Transaction transaction : test2) {
-            System.out.printf("id = %s, ", transaction.id);
-            System.out.printf("parent_id = %s, ", transaction.superId);
-            TransactionPrinter.printSingleTransaction(transaction);
-        }
-        System.out.println("--------------");
         System.out.println("Inserting...");
         Transaction result = db.insertTransaction(test2);
         TransactionPrinter.printParentChild(result, db.getTransactionChild(result));
