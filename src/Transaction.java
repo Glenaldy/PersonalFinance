@@ -1,12 +1,12 @@
 class Transaction {
-    Integer id,
+    private Integer id,
             amount,
             superId;
-    String currency,
+    private String currency,
             category,
             description,
             transDate;
-    Boolean critical, paid;
+    private Boolean critical, paid;
 
     public Transaction(Integer id, String currency, Integer amount, String category, String description,
             String transDate, Integer superId, Boolean critical, Boolean paid) {
@@ -21,40 +21,130 @@ class Transaction {
         this.paid = paid;
     }
 
+    /**
+     * @return the id
+     */
     public Integer getId() {
-        return this.id;
+        return id;
     }
 
+    /**
+     * @param id the id to set
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    /**
+     * @return the amount
+     */
     public Integer getAmount() {
-        return this.amount;
+        return amount;
     }
 
+    /**
+     * @param amount the amount to set
+     */
+    public void setAmount(Integer amount) {
+        this.amount = amount;
+    }
+
+    /**
+     * @return the superId
+     */
     public Integer getSuperId() {
-        return this.superId;
+        return superId;
     }
 
+    /**
+     * @param superId the superId to set
+     */
+    public void setSuperId(Integer superId) {
+        this.superId = superId;
+    }
+
+    /**
+     * @return the currency
+     */
     public String getCurrency() {
-        return this.currency;
+        return currency;
     }
 
+    /**
+     * @param currency the currency to set
+     */
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    /**
+     * @return the category
+     */
     public String getCategory() {
-        return this.category;
+        return category;
     }
 
+    /**
+     * @param category the category to set
+     */
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    /**
+     * @return the description
+     */
     public String getDescription() {
-        return this.description;
+        return description;
     }
 
+    /**
+     * @param description the description to set
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    /**
+     * @return the transDate
+     */
     public String getTransDate() {
-        return this.transDate;
+        return transDate;
     }
 
+    /**
+     * @param transDate the transDate to set
+     */
+    public void setTransDate(String transDate) {
+        this.transDate = transDate;
+    }
+
+    /**
+     * @return the critical
+     */
     public Boolean getCritical() {
-        return this.critical;
+        return critical;
     }
 
+    /**
+     * @param critical the critical to set
+     */
+    public void setCritical(Boolean critical) {
+        this.critical = critical;
+    }
+
+    /**
+     * @return the paid
+     */
     public Boolean getPaid() {
-        return this.paid;
+        return paid;
+    }
+
+    /**
+     * @param paid the paid to set
+     */
+    public void setPaid(Boolean paid) {
+        this.paid = paid;
     }
 
 }

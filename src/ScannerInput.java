@@ -19,7 +19,6 @@ public class ScannerInput extends Sanitizer {
                 throw e;
             }
         }
-
     }
 
     public static String scanInput() throws StopArgumentException, FinishArgumentException, Exception {

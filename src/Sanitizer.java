@@ -5,6 +5,31 @@ import java.util.Date;
 import java.util.Iterator;
 
 public class Sanitizer {
+    public static ArrayList<String> dirtyWalletInputToArray(String input) {
+        // 2022-06-06, 50000
+        String[] arrayInput = splitIntoArray(input, ",");
+        ArrayList<String> output = new ArrayList<>();
+        try {
+            /* CHECK IF [0] NOT STRING */
+            Integer.parseInt(arrayInput[0]);
+            output.add("");
+        } catch (Exception e) {
+            /* IF [0] IS STRING DO NOTHING */
+        }
+
+        for (String string : arrayInput) {
+            output.add(string);
+        }
+
+        /* VALIDATE DATE */
+        try {
+            output.set(0, convertDate(output.get(0)));
+        } catch (Exception e) {
+            output.set(0, GlobalEnvironmentVariable.getDateToday());
+        }
+        return output;
+    }
+
     public static ArrayList<Transaction> dirtyArrayToTransactionList(String input) throws Exception {
         // -5000, conbini, desc > -3000, bread
         ArrayList<String[]> dirtyArray = textToDirtyArray(input);
@@ -92,7 +117,7 @@ public class Sanitizer {
         return output;
     }
 
-    private static String convertDate(String date) throws Exception {
+    public static String convertDate(String date) throws Exception {
         SimpleDateFormat slashDate = new SimpleDateFormat("yyyy/MM/dd");
         SimpleDateFormat dashDate = new SimpleDateFormat("yyyy-MM-dd");
         try {

@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class TransactionPrinter extends ConsoleColors {
+public interface TransactionPrinter {
 
     public static void printSingleTransaction(String colorPrefix, Transaction transaction, String prefix) {
         String printing = String.format(
@@ -9,7 +9,7 @@ public class TransactionPrinter extends ConsoleColors {
                 transaction.getAmount(),
                 transaction.getCategory(),
                 transaction.getDescription());
-        System.out.printf(colorPrefix + prefix + printing + RESET);
+        System.out.printf(colorPrefix + prefix + printing + ConsoleColors.RESET);
     }
 
     public static void printSingleTransaction(Transaction transaction) {
@@ -25,9 +25,22 @@ public class TransactionPrinter extends ConsoleColors {
     }
 
     public static void printParentChild(Transaction parentTransaction, ArrayList<Transaction> childTransactions) {
-        printSingleTransaction(GREEN_BACKGROUND, parentTransaction);
+        printSingleTransaction(ConsoleColors.GREEN_BACKGROUND, parentTransaction);
+
+        Integer uncounted = 0;
         for (Transaction transaction : childTransactions) {
-            printSingleTransaction(GREEN_BACKGROUND_BRIGHT, transaction, "└─");
+            uncounted += transaction.getAmount();
+        }
+        uncounted = parentTransaction.getAmount() - uncounted;
+        String color = (uncounted == 0 && childTransactions.size() > 0) ? ConsoleColors.GREEN_BACKGROUND
+                : ConsoleColors.RED_BACKGROUND;
+
+        if (childTransactions.size() > 0) {
+            System.out.println(color + "├─" + "Uncounted: " + uncounted + ConsoleColors.RESET);
+        }
+
+        for (Transaction transaction : childTransactions) {
+            printSingleTransaction(ConsoleColors.GREEN_BACKGROUND_BRIGHT, transaction, "└─");
         }
     }
 }

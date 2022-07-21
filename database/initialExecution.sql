@@ -33,11 +33,10 @@ CREATE TABLE wallets(
 
 CREATE TABLE wallet_balance(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    record_currency STRING,
-    record_wallet STRING,
+    record_wallet ID,
     record_date DATE NOT NULL,
     amount INTEGER NOT NULL,
-    CONSTRAINT wallet_name_currency_balance FOREIGN KEY(record_currency, record_wallet) REFERENCES wallets(currency, wallet_name)
+    CONSTRAINT wallet_foreign_id FOREIGN KEY(record_wallet) REFERENCES wallets(id)
 );
 
 INSERT INTO
@@ -64,19 +63,18 @@ VALUES
 
 INSERT INTO
     wallet_balance(
-        record_currency,
         record_wallet,
         record_date,
         amount
     )
 VALUES
-    ("yen", "wallet", "2022-07-01", 1000),
-    ("yen", "wallet", "2022-07-10", 8000),
-    ("yen", "wallet", "2022-07-20", 5000),
-    ("yen", "yuucho", "2022-07-01", 10000),
-    ("yen", "yuucho", "2022-07-20", 50000),
-    ("yen", "paypal", "2022-07-01", 10000),
-    ("yen", "paypal", "2022-07-01", 50000);
+    (1, "2022-07-01", 1000),
+    (1, "2022-07-10", 8000),
+    (1, "2022-07-20", 5000),
+    (2, "2022-07-01", 10000),
+    (2, "2022-07-20", 50000),
+    (3, "2022-06-01", 10000),
+    (3, "2022-07-01", 50000);
 
 INSERT INTO
     transactions (
@@ -102,8 +100,18 @@ VALUES
         5000,
         "another conbini",
         "parent transaction",
-        "2022-07-18"
+        "2022-06-18"
+    ),
+    (
+        3,
+        "yen",
+        5000,
+        "another conbini",
+        "parent transaction",
+        "2022-08-18"
     );
+
+;
 
 INSERT INTO
     transactions (
@@ -128,7 +136,7 @@ VALUES
         1000,
         "conbini",
         "child transaction",
-        "2022-07-18",
+        "2022-06-18",
         2
     ),
     (
@@ -144,7 +152,7 @@ VALUES
         1000,
         "conbini",
         "child transaction",
-        "2022-07-18",
+        "2022-06-18",
         2
     ),
     (
@@ -152,6 +160,6 @@ VALUES
         1000,
         "conbini",
         "child transaction",
-        "2022-07-18",
+        "2022-06-18",
         2
     );

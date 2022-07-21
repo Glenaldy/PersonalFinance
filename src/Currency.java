@@ -18,19 +18,19 @@ public class Currency {
         return this.currencyName;
     }
 
+    public static ArrayList<String> getCurrencyList() {
+        ArrayList<String> currencyList = new ArrayList<>();
+        for (Currency currency : currencyList()) {
+            currencyList.add(currency.getCurrencyName());
+        }
+        return currencyList;
+    }
+
     private static ArrayList<Currency> currencyList() {
         ArrayList<Currency> currencyList = new ArrayList<>();
         try {
             currencyList = GlobalEnvironmentVariable.db.getCurrencyList();
         } catch (SQLException e) {
-        }
-        return currencyList;
-    }
-
-    public static ArrayList<String> getCurrencyList() {
-        ArrayList<String> currencyList = new ArrayList<>();
-        for (Currency currency : currencyList()) {
-            currencyList.add(currency.getCurrencyName());
         }
         return currencyList;
     }

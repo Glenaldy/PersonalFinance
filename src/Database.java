@@ -1,6 +1,5 @@
 
 import java.util.ArrayList;
-
 import java.sql.*;
 
 public class Database {
@@ -16,10 +15,11 @@ public class Database {
 
     public ArrayList<Transaction> getTransactionFromYearMonth(String yearMonth) throws SQLException {
         ArrayList<Transaction> transactions = new ArrayList<>();
-        String sql = "SELECT * FROM transactions WHERE strftime('%Y-%m', trans_date) = ? AND parent_id IS NULL;";
+        String sql = "SELECT * FROM transactions WHERE strftime('%Y-%m', trans_date) = ? AND currency = ? AND parent_id IS NULL;";
 
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.setString(1, yearMonth);
+        statement.setString(2, GlobalEnvironmentVariable.currency);
         ResultSet result = statement.executeQuery();
 
         while (result.next()) {
@@ -28,6 +28,54 @@ public class Database {
         }
 
         return transactions;
+    }
+
+    public void updateWalletBalance(Integer id, Integer updateAmount, String date) throws SQLException {
+        String sql = "UPDATE wallet_balance SET amount = ? WHERE record_date = ? AND record_wallet = ?;";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setInt(1, updateAmount);
+        statement.setString(2, date);
+        statement.setInt(3, id);
+        statement.executeUpdate();
+
+        sql = "SELECT changes() AS count;";
+        statement = connection.prepareStatement(sql);
+        ResultSet result = statement.executeQuery();
+        int count = 0;
+        while (result.next()) {
+            count = result.getInt("count");
+        }
+
+        if (count == 0) {
+            sql = "INSERT INTO wallet_balance (record_wallet, record_date, amount) VALUES (?, ?, ?);";
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, id);
+            statement.setString(2, date);
+            statement.setInt(3, updateAmount);
+
+            statement.executeUpdate();
+        }
+    }
+
+    public ArrayList<WalletBalance> getLatestWalletBalance() throws SQLException {
+        String sql = "SELECT wallets.id, wallets.wallet_name, wallet_balance.amount, wallet_balance.record_date FROM wallet_balance JOIN wallets ON wallet_balance.record_wallet = wallets.id WHERE wallets.currency = ? AND record_date = (SELECT max(record_date) FROM wallet_balance AS latest WHERE strftime('%Y-%m', record_date) = ? AND wallets.id = latest.record_wallet);";
+
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setString(1, GlobalEnvironmentVariable.currency);
+        statement.setString(2, GlobalEnvironmentVariable.getYearMonth(GlobalEnvironmentVariable.getDateToday()));
+
+        ResultSet result = statement.executeQuery();
+        ArrayList<WalletBalance> walletBalances = new ArrayList<>();
+        while (result.next()) {
+            WalletBalance walletBalance = new WalletBalance(
+                    result.getInt("id"),
+                    result.getString("wallet_name"),
+                    result.getInt("amount"),
+                    result.getString("record_date"));
+            walletBalances.add(walletBalance);
+        }
+
+        return walletBalances;
     }
 
     public ArrayList<Wallet> getWalletList(String currency) throws SQLException {
@@ -75,17 +123,17 @@ public class Database {
 
         PreparedStatement prepSql = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
-        Integer amount = transaction.amount,
-                superId = transaction.superId;
-        String currency = transaction.currency,
-                category = transaction.category,
-                description = transaction.description,
-                transDate = transaction.transDate;
-        Boolean critical = transaction.critical,
-                paid = transaction.paid;
+        Integer amount = transaction.getAmount(),
+                superId = transaction.getSuperId();
+        String currency = transaction.getCurrency(),
+                category = transaction.getCategory(),
+                description = transaction.getDescription(),
+                transDate = transaction.getTransDate();
+        Boolean critical = transaction.getCritical(),
+                paid = transaction.getPaid();
 
         if (superId != null)
-            prepSql.setInt(6, transaction.superId);
+            prepSql.setInt(6, transaction.getSuperId());
         else
             prepSql.setNull(6, Types.INTEGER);
 
@@ -124,7 +172,7 @@ public class Database {
                 if (inputTransactions.get(i) == null) {
                     throw new SQLException("Trying to input null transaction");
                 }
-                inputTransactions.get(i).superId = parentId;
+                inputTransactions.get(i).setSuperId(parentId);
                 this.insertSingleTransaction(inputTransactions.get(i));
             }
             return this.getTransactionFromId(parentId);

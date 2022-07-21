@@ -29,7 +29,7 @@ public class GlobalEnvironmentVariable {
         return DateTimeFormatter.ofPattern("yyyy-MM-dd").format(LocalDate.now()).toString();
     }
 
-    public static String getYearMonth(String date) {
+    public static String getYearMonth(String date, int monthModifier) {
         SimpleDateFormat dashDate = new SimpleDateFormat("yyyy-MM-dd");
         Date convert;
         try {
@@ -38,12 +38,17 @@ public class GlobalEnvironmentVariable {
             cal.setTime(convert);
 
             String year = String.valueOf(cal.get(Calendar.YEAR));
-            String month = (cal.get(Calendar.MONTH) + 1) < 10 ? 0 + String.valueOf(cal.get(Calendar.MONTH) + 1)
-                    : String.valueOf(cal.get(Calendar.MONTH) + 1);
+            String month = (cal.get(Calendar.MONTH) + 1) < 10
+                    ? 0 + String.valueOf(cal.get(Calendar.MONTH) + 1 + monthModifier)
+                    : String.valueOf(cal.get(Calendar.MONTH) + 1 + monthModifier);
             return String.format("%s-%s", year, month);
         } catch (ParseException e) {
             return null;
         }
+    }
+
+    public static String getYearMonth(String date) {
+        return getYearMonth(date, 0);
     }
 
 }
