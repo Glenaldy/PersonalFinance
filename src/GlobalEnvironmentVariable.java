@@ -1,8 +1,9 @@
-import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 public class GlobalEnvironmentVariable {
     private static final String PATH = "D:/School/1_KCGI/2022 Spring/Object Oriented Programming/Programming/jp/kcgi/twentytwo/spring/oop/PersonalFinance";
@@ -12,6 +13,7 @@ public class GlobalEnvironmentVariable {
     private static String databaseURL = jdbcUrl + "/" + PATH + "/" + database;
 
     public static Database db;
+
     static {
         try {
             db = new Database(databaseURL, PATH);
@@ -23,32 +25,25 @@ public class GlobalEnvironmentVariable {
     static String currency = "yen";
     static String currencyList;
 
-    // private static ArrayList<Wallet> walletList = ;
-    // static {
-    // try {
-    // walletList = db.getWalletList(GlobalEnvironmentVariable.currency);
-    // } catch (Exception e) {
-    // System.out.println("Cannot Get Wallet List");
-    // }
-    // }
-
-    static String wallet = walletList().stream().map(Wallet::getWalletName).collect(Collectors.joining(", "));
-
-    private static ArrayList<Wallet> walletList() {
-        ArrayList<Wallet> walletList = new ArrayList<>();
-
-        try {
-            walletList = db.getWalletList(currency);
-        } catch (SQLException e) {
-
-        }
-
-        return walletList;
-
+    public static String getDateToday() {
+        return DateTimeFormatter.ofPattern("yyyy-MM-dd").format(LocalDate.now()).toString();
     }
 
-    public static String getDateToday() {
-        return DateTimeFormatter.ofPattern("yyyy/MM/dd").format(LocalDate.now()).toString();
+    public static String getYearMonth(String date) {
+        SimpleDateFormat dashDate = new SimpleDateFormat("yyyy-MM-dd");
+        Date convert;
+        try {
+            convert = dashDate.parse(date);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(convert);
+
+            String year = String.valueOf(cal.get(Calendar.YEAR));
+            String month = (cal.get(Calendar.MONTH) + 1) < 10 ? 0 + String.valueOf(cal.get(Calendar.MONTH) + 1)
+                    : String.valueOf(cal.get(Calendar.MONTH) + 1);
+            return String.format("%s-%s", year, month);
+        } catch (ParseException e) {
+            return null;
+        }
     }
 
 }

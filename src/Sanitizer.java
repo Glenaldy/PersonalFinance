@@ -80,8 +80,11 @@ public class Sanitizer {
         }
 
         /* VALIDATE DATE */
-        tempContainer.set(0,
-                validDate(tempContainer.get(0)) ? tempContainer.get(0) : GlobalEnvironmentVariable.getDateToday());
+        try {
+            tempContainer.set(0, convertDate(tempContainer.get(0)));
+        } catch (Exception e) {
+            tempContainer.set(0, GlobalEnvironmentVariable.getDateToday());
+        }
 
         // ex. {"2022/07/20", "-5000", "conbini", "desc"}
 
@@ -89,16 +92,23 @@ public class Sanitizer {
         return output;
     }
 
-    private static Boolean validDate(String date) {
-        Boolean output = true;
+    private static String convertDate(String date) throws Exception {
+        SimpleDateFormat slashDate = new SimpleDateFormat("yyyy/MM/dd");
+        SimpleDateFormat dashDate = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-            Date convert = sdf.parse(date);
-            sdf.format(convert);
-        } catch (Exception x) {
-            output = false;
+            Date convert = slashDate.parse(date);
+            String converted = dashDate.format(convert);
+            return converted;
+        } catch (Exception e) {
         }
-        return output;
+
+        try {
+            Date convert = dashDate.parse(date);
+            String converted = dashDate.format(convert);
+            return converted;
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     public static Transaction sanitizeInputArrayIntoTransaction(String[] dirtyStringArray) {

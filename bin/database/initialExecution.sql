@@ -70,13 +70,13 @@ INSERT INTO
         amount
     )
 VALUES
-    ("yen", "wallet", "2022/07/01", 1000),
-    ("yen", "wallet", "2022/07/10", 8000),
-    ("yen", "wallet", "2022/07/20", 5000),
-    ("yen", "yuucho", "2022/07/01", 10000),
-    ("yen", "yuucho", "2022/07/20", 50000),
-    ("yen", "paypal", "2022/07/01", 10000),
-    ("yen", "paypal", "2022/07/01", 50000);
+    ("yen", "wallet", "2022-07-01", 1000),
+    ("yen", "wallet", "2022-07-10", 8000),
+    ("yen", "wallet", "2022-07-20", 5000),
+    ("yen", "yuucho", "2022-07-01", 10000),
+    ("yen", "yuucho", "2022-07-20", 50000),
+    ("yen", "paypal", "2022-07-01", 10000),
+    ("yen", "paypal", "2022-07-01", 50000);
 
 INSERT INTO
     transactions (
@@ -94,7 +94,7 @@ VALUES
         5000,
         "conbini",
         "parent transaction",
-        "2022/07/18"
+        "2022-07-18"
     ),
     (
         2,
@@ -102,7 +102,7 @@ VALUES
         5000,
         "another conbini",
         "parent transaction",
-        "2022/07/18"
+        "2022-07-18"
     );
 
 INSERT INTO
@@ -120,7 +120,7 @@ VALUES
         1000,
         "conbini",
         "child transaction",
-        "2022/07/18",
+        "2022-07-18",
         1
     ),
     (
@@ -128,7 +128,7 @@ VALUES
         1000,
         "conbini",
         "child transaction",
-        "2022/07/18",
+        "2022-07-18",
         2
     ),
     (
@@ -136,7 +136,7 @@ VALUES
         1000,
         "conbini",
         "child transaction",
-        "2022/07/18",
+        "2022-07-18",
         1
     ),
     (
@@ -144,7 +144,7 @@ VALUES
         1000,
         "conbini",
         "child transaction",
-        "2022/07/18",
+        "2022-07-18",
         2
     ),
     (
@@ -152,6 +152,6 @@ VALUES
         1000,
         "conbini",
         "child transaction",
-        "2022/07/18",
+        "2022-07-18",
         2
     );

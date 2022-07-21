@@ -14,6 +14,22 @@ public class Database {
         createOpenDB(connection, statement, path);
     }
 
+    public ArrayList<Transaction> getTransactionFromYearMonth(String yearMonth) throws SQLException {
+        ArrayList<Transaction> transactions = new ArrayList<>();
+        String sql = "SELECT * FROM transactions WHERE strftime('%Y-%m', trans_date) = ? AND parent_id IS NULL;";
+
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setString(1, yearMonth);
+        ResultSet result = statement.executeQuery();
+
+        while (result.next()) {
+            Transaction transaction = getTransactionFromId(result.getInt(1));
+            transactions.add(transaction);
+        }
+
+        return transactions;
+    }
+
     public ArrayList<Wallet> getWalletList(String currency) throws SQLException {
         String sql = "SELECT * FROM wallets WHERE currency = ?;";
 

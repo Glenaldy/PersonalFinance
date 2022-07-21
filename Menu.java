@@ -14,6 +14,7 @@ public class Menu {
         while (true) {
             try {
                 System.out.print("\033[H\033[2J");
+                System.out.println(GlobalEnvironmentVariable.getDateToday());
                 // SHOW CURRENT CURRENCY
                 System.out.printf("Currency mode: %s\n", GlobalEnvironmentVariable.currency);
                 // SHOW WALLET(S) ACCORDING TO CURRENCY
@@ -23,7 +24,7 @@ public class Menu {
 
                 // MENU CHOICES
                 System.out.printf("[1] Input transaction into the database\n");
-                System.out.printf("[2] See my transaction for this month\n");
+                System.out.printf("[2] See my transaction for selected year-month\n");
                 System.out.printf("[3] Change my currency mode\n");
                 System.out.printf("[4]\n");
                 System.out.printf("[5]\n");
@@ -31,9 +32,10 @@ public class Menu {
                 String input = ScannerInput.scanInput();
                 switch (Integer.parseInt(input.trim())) {
                     case 1:
-                        keepAskingForTransactionInput(db);
+                        inputTransactionIntoDatabase(db);
                         break;
                     case 2:
+                        getCurrentMonthTransaction(db);
                         break;
                     case 3:
                         changeGlobalEnvironmentCurrency();
@@ -51,6 +53,58 @@ public class Menu {
                 System.out.println("Thank you for today");
                 System.exit(0);
             } catch (Exception e) {
+            }
+        }
+    }
+
+    public static void getCurrentMonthTransaction(Database db) throws FinishArgumentException {
+        while (true) {
+            try {
+                flushConsole();
+                System.out.println("MENU: TRANSACTION SHOW");
+                System.out.println(GlobalEnvironmentVariable.getDateToday());
+                System.out.println("Transactions from:");
+                System.out.printf("[0] Input my own year-month\n");
+                System.out.printf("[1] This month\n");
+                System.out.printf("[2] Last month\n");
+                System.out.printf("[3] Next month\n");
+
+                String input = ScannerInput.scanInput();
+                switch (Integer.parseInt(input.trim())) {
+                    case 0:
+
+                        break;
+                    case 1:
+                        String yearMonth = GlobalEnvironmentVariable
+                                .getYearMonth(GlobalEnvironmentVariable.getDateToday());
+                        System.out.println(yearMonth);
+
+                        ArrayList<Transaction> results = GlobalEnvironmentVariable.db
+                                .getTransactionFromYearMonth(yearMonth);
+
+                        for (Transaction transaction : results) {
+                            TransactionPrinter.printParentChild(transaction,
+                                    GlobalEnvironmentVariable.db.getTransactionChild(transaction));
+                        }
+
+                        String asd = ScannerInput.scanInput();
+                        break;
+                    case 2:
+
+                        break;
+                    case 3:
+                        break;
+                    default:
+                        break;
+                }
+            } catch (StopArgumentException e) {
+                break;
+            } catch (FinishArgumentException e) {
+                throw e;
+            } catch (SQLException e) {
+            } catch (Exception e) {
+                System.out.println(
+                        "Invalid input, refer to the syntax\n\"--stop\" to stop Inputting\n\"--finish\" to end the program");
             }
         }
     }
@@ -87,7 +141,7 @@ public class Menu {
         }
     }
 
-    public static void keepAskingForTransactionInput(Database db) throws FinishArgumentException {
+    public static void inputTransactionIntoDatabase(Database db) throws FinishArgumentException {
         while (true) {
             try {
                 flushConsole();
