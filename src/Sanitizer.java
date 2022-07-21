@@ -1,8 +1,6 @@
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 
 public class Sanitizer {
     public static ArrayList<String> dirtyWalletInputToArray(String input) {
@@ -101,7 +99,7 @@ public class Sanitizer {
         /* ONLY FOR CHILD OBJECT */
         if (parent != null) {
             tempContainer.add(tempContainer.get(2));
-            tempContainer.set(2, parent.category);
+            tempContainer.set(2, parent.getCategory());
         }
 
         /* VALIDATE DATE */

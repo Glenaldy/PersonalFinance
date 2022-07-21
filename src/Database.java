@@ -1,5 +1,8 @@
 
 import java.util.ArrayList;
+import CustomException.FinishArgumentException;
+import CustomException.StopArgumentException;
+
 import java.sql.*;
 
 public class Database {
@@ -52,9 +55,31 @@ public class Database {
             statement.setInt(1, id);
             statement.setString(2, date);
             statement.setInt(3, updateAmount);
-
             statement.executeUpdate();
         }
+    }
+
+    public void changeTransactionBooleanField(Transaction transaction, String field) throws SQLException {
+        String sql;
+        Boolean bool;
+        if (field.equals("critical")) {
+            sql = "UPDATE transactions SET critical = ? WHERE transactions.id = ?;";
+            bool = !transaction.getCritical();
+        } else if (field.equals("paid")) {
+            sql = "UPDATE transactions SET paid = ? WHERE transactions.id = ?;";
+            bool = !transaction.getPaid();
+        } else {
+            throw new SQLException();
+        }
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setBoolean(1, bool);
+        for (Transaction child : GlobalEnvironmentVariable.db.getTransactionChild(transaction)) {
+            statement.setInt(2, child.getId());
+            statement.executeUpdate();
+        }
+
+        statement.setInt(2, transaction.getId());
+        statement.executeUpdate();
     }
 
     public ArrayList<WalletBalance> getLatestWalletBalance() throws SQLException {
@@ -179,6 +204,13 @@ public class Database {
         }
     }
 
+    public void deleteTransactionFromId(int id) throws StopArgumentException, FinishArgumentException, Exception {
+        String sql = "DELETE FROM transactions WHERE transactions.id = ?;";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setInt(1, id);
+        statement.executeUpdate();
+    }
+
     public Transaction getTransactionFromId(int queryId) throws SQLException {
         String sql = "SELECT * FROM transactions WHERE id = ?;";
 
@@ -233,82 +265,6 @@ public class Database {
         }
         return childSet;
     }
-
-    // public ArrayList<Transaction> selectAll(String table, String argument) throws
-    // SQLException {
-
-    // ArrayList<Transaction> collection = new ArrayList<>();
-    // String sql = String.format("SELECT * FROM %s;", table);
-    // ResultSet result = statement.executeQuery(sql);
-    // while (result.next()) {
-    // Integer id = result.getInt("id");
-    // String currency = result.getString("currency");
-    // Integer amount = result.getInt("id");
-    // String category = result.getString("category");
-    // String description = result.getString("description");
-    // String transDate = result.getString("trans_date");
-    // Integer parentId = result.getInt("parent_id");
-
-    // Transaction transaction = new Transaction(id, currency, amount, category,
-    // description, transDate, parentId);
-
-    // collection.add(transaction);
-    // }
-    // return collection;
-    // }
-
-    // public ArrayList<Transaction> selectAll(String table) throws SQLException {
-    // return selectAll(table, "");
-    // }
-
-    // public void selectAllParent() {
-    // String parentQuery = "SELECT parent.id AS parent_id, parent.category AS
-    // parent_category,parent.description AS parent_description,parent.amount AS
-    // parent_total_transaction, COUNT(child.id) AS count_child_transaction,
-    // (parent.amount - SUM(child.amount)) AS unlabeled_amount FROM transactions AS
-    // parent JOIN transactions AS child ON parent.id = child.parent_id WHERE
-    // parent.id = ? GROUP BY parent.id;";
-
-    // PreparedStatement prepSql = connection.prepareStatement(parentQuery,
-    // Statement.RETURN_GENERATED_KEYS);
-    // prepSql.setInt(1, id);
-    // ResultSet parentResult = prepSql.executeQuery();
-
-    // while (parentResult.next()) {
-    // System.out.println("reading transaction of " + id);
-    // Integer parentId = parentResult.getInt("parent_id");
-    // String parentCategory = parentResult.getString("parent_category");
-    // String parentDescription = parentResult.getString("parent_description");
-    // Integer parentTotalTransaction =
-    // parentResult.getInt("parent_total_transaction");
-    // Integer countChildTransaction =
-    // parentResult.getInt("count_child_transaction");
-    // Integer unlabeledAmount = parentResult.getInt("unlabeled_amount");
-
-    // System.out.printf("%s\t\t|\t%d\t|\t%s\t|\t%d\n", parentCategory,
-    // parentTotalTransaction, parentDescription,
-    // unlabeledAmount);
-
-    // if (countChildTransaction > 0) {
-    // String childQuery = String.format(
-    // "SELECT child.id AS child_id, child.amount AS child_transaction_amount,
-    // child.description AS child_description FROM transactions AS child WHERE
-    // parent_id = %d;",
-    // parentId);
-    // ResultSet childResult = statement.executeQuery(childQuery);
-
-    // while (childResult.next()) {
-    // Integer childID = childResult.getInt("child_id");
-    // Integer childTransactionAmount =
-    // childResult.getInt("child_transaction_amount");
-    // String childDescription = childResult.getString("child_description");
-
-    // System.out.printf("└─%s\t|\t%d\n", childDescription, childTransactionAmount);
-    // }
-    // }
-    // }
-
-    // }
 
     private static void createOpenDB(Connection connection, Statement statement, String PATH) {
         try {

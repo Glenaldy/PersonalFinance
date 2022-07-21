@@ -3,12 +3,19 @@ import java.util.ArrayList;
 public interface TransactionPrinter {
 
     public static void printSingleTransaction(String colorPrefix, Transaction transaction, String prefix) {
+        String critical = transaction.getCritical() ? ", critical" : ", not critical";
+        String paid = transaction.getPaid() ? "" : ", unpaid";
+        if (transaction.getSuperId() != 0) {
+            critical = "";
+            paid = "";
+        }
         String printing = String.format(
-                "%s, %d, %s, %s\n",
+                "%s, %d, %s, %s%s%s\n",
                 transaction.getTransDate(),
                 transaction.getAmount(),
                 transaction.getCategory(),
-                transaction.getDescription());
+                transaction.getDescription(),
+                critical, paid);
         System.out.printf(colorPrefix + prefix + printing + ConsoleColors.RESET);
     }
 

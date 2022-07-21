@@ -94,13 +94,13 @@ public class MainMenu {
                 System.out.printf("[1] Normal transaction\n");
                 System.out.printf("[2] Critical transaction\n");
 
-                Integer input = Integer.parseInt(ScannerInput.scanInput());
+                Integer input = Integer.parseInt(ScannerInput.scanInput().trim());
                 switch (input) {
                     case 1:
-                        inputTransactionIntoDatabase(GlobalEnvironmentVariable.db, false, paid);
+                        inputTransactionIntoDatabase(false, paid);
                         break;
                     case 2:
-                        inputTransactionIntoDatabase(GlobalEnvironmentVariable.db, true, paid);
+                        inputTransactionIntoDatabase(true, paid);
                         break;
                     default:
                         throw new Exception();
@@ -129,7 +129,7 @@ public class MainMenu {
                             wallet.getLatestAmount(), wallet.getLatestRecord());
                 }
 
-                Integer input = Integer.parseInt(ScannerInput.scanInput());
+                Integer input = Integer.parseInt(ScannerInput.scanInput().trim());
                 if (input <= walletList.size()) {
                     WalletBalance wallet = walletList.get(input - 1);
                     System.out.printf("Changing the wallet %s (%s)\n", wallet.getWalletName(),
@@ -207,13 +207,17 @@ public class MainMenu {
             TransactionPrinter.printParentChild(results.get(i),
                     GlobalEnvironmentVariable.db.getTransactionChild(results.get(i)));
         }
-
-        System.out.println("\n[0] Change value [1] Check other transaction");
-        int input = Integer.parseInt(ScannerInput.scanInput());
-
+        System.out.println();
+        System.out.println("Result " + results.size() + " transactions");
+        separatorDash();
+        System.out.println("[0] Change value [1] Check other transaction");
+        int input = Integer.parseInt(ScannerInput.scanInput().trim());
         switch (input) {
             case 0:
                 System.out.println("Insert transaction to change");
+                int changeInput = Integer.parseInt(ScannerInput.scanInput().trim()) - 1;
+
+                changeTransaction(results.get(changeInput));
 
                 break;
             case 1:
@@ -222,6 +226,53 @@ public class MainMenu {
                 break;
         }
 
+    }
+
+    public static void changeTransaction(Transaction transaction) throws FinishArgumentException {
+        while (true) {
+            try {
+                menuTop("Change Selected Transaction");
+                Transaction newestTransaction = GlobalEnvironmentVariable.db.getTransactionFromId(transaction.getId());
+                TransactionPrinter.printParentChild(newestTransaction,
+                        GlobalEnvironmentVariable.db.getTransactionChild(newestTransaction));
+                System.out.println("What would you like to change?");
+
+                System.out.printf("[0] Cancel\n");
+                System.out.printf("[1] Change criticallity\n");
+                System.out.printf("[2] Change paid\n");
+                System.out.printf("[3] Delete transaction\n");
+
+                int input = Integer.parseInt(ScannerInput.scanInput().trim());
+                switch (input) {
+                    case 0:
+                        throw new StopArgumentException("Cancel transaction change");
+                    case 1:
+                        GlobalEnvironmentVariable.db.changeTransactionBooleanField(newestTransaction, "critical");
+                        throw new Exception();
+                    case 2:
+                        GlobalEnvironmentVariable.db.changeTransactionBooleanField(newestTransaction, "paid");
+                        throw new Exception();
+                    case 3:
+                        System.out.println(
+                                "Warning, this can't be undone, it will also delete all the children transaction. Type \"yes/y\" to continue.");
+                        String confirmation = ScannerInput.scanInput();
+                        if (confirmation.equalsIgnoreCase("yes") || confirmation.equalsIgnoreCase("y")) {
+                            System.out.println(newestTransaction.getId());
+                            GlobalEnvironmentVariable.db.deleteTransactionFromId(newestTransaction.getId());
+                            break;
+                        } else {
+                            break;
+                        }
+                    default:
+                        break;
+                }
+            } catch (StopArgumentException e) {
+                break;
+            } catch (FinishArgumentException e) {
+                throw e;
+            } catch (Exception e) {
+            }
+        }
     }
 
     public static void changeGlobalEnvironmentCurrency() throws FinishArgumentException {
@@ -237,7 +288,7 @@ public class MainMenu {
                 }
                 System.out.printf("[%s] Insert new currency\n", currencyList.size());
 
-                int selection = Integer.parseInt(ScannerInput.scanInput());
+                int selection = Integer.parseInt(ScannerInput.scanInput().trim());
                 if (selection == 0) {
                     throw new StopArgumentException("quit");
                 }
@@ -259,7 +310,7 @@ public class MainMenu {
         }
     }
 
-    public static void inputTransactionIntoDatabase(Database db, Boolean critical, Boolean paid)
+    public static void inputTransactionIntoDatabase(Boolean critical, Boolean paid)
             throws FinishArgumentException {
         String optional = ConsoleColors.BLACK_BACKGROUND_BRIGHT + ConsoleColors.BLACK_BOLD;
         String mandatory = ConsoleColors.RED_BACKGROUND_BRIGHT + ConsoleColors.WHITE_BOLD;
@@ -300,11 +351,11 @@ public class MainMenu {
 
                 System.out.printf("\nTransaction:\t");
 
-                Transaction result = ScannerInput.getInputTransactionPushDB(db);
+                Transaction result = ScannerInput.getInputTransactionPushDB(GlobalEnvironmentVariable.db);
                 result.setCritical(critical);
                 result.setPaid(paid);
 
-                TransactionPrinter.printParentChild(result, db.getTransactionChild(result));
+                TransactionPrinter.printParentChild(result, GlobalEnvironmentVariable.db.getTransactionChild(result));
                 System.out.println();
             } catch (StopArgumentException e) {
                 break;
