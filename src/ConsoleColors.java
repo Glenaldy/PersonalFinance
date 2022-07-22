@@ -1,3 +1,8 @@
+/**
+ * This list of ascii colors for console is shared by shakram02 in
+ * stackoverflow.
+ */
+
 public class ConsoleColors {
     // Reset
     public static final String RESET = "\033[0m" + "\u001B[0m"; // Text Reset

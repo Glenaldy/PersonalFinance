@@ -5,11 +5,49 @@ import java.util.HashMap;
 import CustomException.FinishArgumentException;
 import CustomException.StopArgumentException;
 
+/**
+ * This interface has all of the sub menu with all the helper methods needed.
+ * This interface will be used and called by the MainMenu method.
+ */
 public interface Menus {
+    /**
+     * This static method will print out special ascii code that will flush and
+     * clear the console
+     */
     public static void flushConsole() {
         System.out.print("\033[H\033[2J");
     }
 
+    /**
+     * This static method will return a string formatted with the color ascii code
+     * from the ConsoleColors class.
+     * 
+     * ex. 1 -> [1] <colorized>
+     * 
+     * @param selection
+     * @return String formatted
+     */
+    public static String selectionColor(String selection) {
+        return ConsoleColors.CYAN_BACKGROUND_BRIGHT + "[ " + selection + " ]" + ConsoleColors.RESET + " ";
+    }
+
+    /**
+     * Overload method of selectionColor() to accept int as argument.
+     * 
+     * @param selection
+     * @return String formatted
+     */
+    public static String selectionColor(int selection) {
+        return selectionColor(String.format("%s", selection));
+    }
+
+    /**
+     * This static method will print out lines of dash to create separation in the
+     * console for easier read. According to the boolean argument given it will
+     * printout newline at the end of the dashes.
+     * 
+     * @param newLine
+     */
     public static void separatorDash(Boolean newLine) {
         if (newLine)
             System.out.println("------------");
@@ -17,6 +55,17 @@ public interface Menus {
             System.out.printf("------------");
     }
 
+    /**
+     * This menuTop will flush out the console by calling flushConsole method and
+     * print out the details of the application state, those are currency and date.
+     * It will also remind the user of the --stop and --finish keyword to exit the
+     * menu or close the application at any time.
+     * 
+     * According to the argument it will print out the name of the menu it's
+     * displaying.
+     * 
+     * @param menuNameDetail
+     */
     public static void menuTop(String menuNameDetail) {
         flushConsole();
         System.out.printf(ConsoleColors.WHITE_BACKGROUND_BRIGHT + ConsoleColors.BLACK_BOLD);
@@ -28,6 +77,25 @@ public interface Menus {
         separatorDash(true);
     }
 
+    /**
+     * This static method is responsible for the menus of
+     * [ 1 ] Input paid transaction into the database
+     * [ 2 ] Input unpaid transaction into the database
+     * 
+     * It will set the transaction inputted into either paid or unpaid according to
+     * user choices.
+     * 
+     * Inside each the user will be asked if the transaction input is critical or
+     * not by giving the user the choices of
+     * [ 1 ] Normal transaction
+     * [ 2 ] Critical transaction
+     * 
+     * The method will then call the inputTransactionIntoDatabase() method according
+     * to the user choices.
+     * 
+     * @param paid
+     * @throws FinishArgumentException
+     */
     public static void criticalTransactionConfirmation(Boolean paid) throws FinishArgumentException {
         while (true) {
             try {
@@ -61,6 +129,156 @@ public interface Menus {
         }
     }
 
+    /**
+     * This static method is responsible for the menu of
+     * [ 3 ] See my transaction for selected year-month
+     * 
+     * Inside it will ask for the user for
+     * [ 0 ] Quit
+     * [ 1 ] This month
+     * [ 2 ] Last month
+     * [ 3 ] Next month
+     * [ 4 ] Input my own year-month
+     * 
+     * @param db
+     * @throws FinishArgumentException
+     */
+    public static void getCurrentMonthTransaction(Database db) throws FinishArgumentException {
+        while (true) {
+            try {
+                menuTop("Show transaction");
+
+                System.out.println("Show transactions from");
+                System.out.printf("%sQuit\n", selectionColor(0));
+                System.out.printf("%sThis month\n", selectionColor(1));
+                System.out.printf("%sLast month\n", selectionColor(2));
+                System.out.printf("%sNext month\n", selectionColor(3));
+                System.out.printf("%sInput my own year-month\n", selectionColor(4));
+
+                String input = ScannerInput.scanInput();
+                switch (Integer.parseInt(input.trim())) {
+                    case 0:
+                        throw new StopArgumentException("Stop");
+                    case 1:
+                        printTransactionsByMonth(
+                                Sanitizer.getYearMonth(GlobalEnvironmentVariable.getDateToday()));
+                        break;
+                    case 2:
+                        printTransactionsByMonth(Sanitizer.getYearMonth(GlobalEnvironmentVariable.getDateToday(), -1));
+
+                        break;
+                    case 3:
+                        printTransactionsByMonth(Sanitizer.getYearMonth(GlobalEnvironmentVariable.getDateToday(), 1));
+                        break;
+                    case 4:
+                        printTransactionsByMonth(
+                                String.join("-", Sanitizer.splitIntoArray(ScannerInput.scanInput(), "/")));
+                        break;
+                    default:
+                        break;
+                }
+            } catch (StopArgumentException e) {
+                break;
+            } catch (FinishArgumentException e) {
+                throw e;
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    /**
+     * This static method is responsible for the menu
+     * [ 4 ] Change the currency mode
+     * 
+     * It will show all the currency available in the database and show it to the
+     * user as menus of
+     * [ 0 ] Quit
+     * [ 1 ] <currency>
+     * .
+     * .
+     * [ i + 1 ] Insert new currency
+     * [ i + 2 ] Delete a currency
+     * 
+     * Selecting the currency will change the currency into selected currency
+     * 
+     * Insert new currency will ask the user to input a string and removes
+     * 
+     * @throws FinishArgumentException
+     */
+    public static void changeGlobalEnvironmentCurrency() throws FinishArgumentException {
+        while (true) {
+            try {
+                menuTop("Change Currency");
+
+                System.out.println("SELECT TO CHANGE CURRENCY");
+                /* MENU SELECTION */
+                System.out.printf("%sQuit\n", selectionColor(0));
+                ArrayList<String> currencyList = Currency.getCurrencyList();
+                for (int i = 0; i < currencyList.size(); i++) {
+                    System.out.printf("%s%s\n", selectionColor(i + 1), currencyList.get(i));
+                }
+                System.out.printf("%sInsert new currency\n", selectionColor(currencyList.size() + 1));
+                System.out.printf("%sDelete a currency\n", selectionColor(currencyList.size() + 2));
+
+                /* ACCEPT THE INPUT */
+                int selection = Integer.parseInt(ScannerInput.scanInput().trim());
+                if (selection == 0) {
+                    throw new StopArgumentException("quit");
+                }
+                if (selection <= currencyList.size()) {
+                    GlobalEnvironmentVariable.currency = currencyList.get(selection - 1);
+                } else if (selection == currencyList.size() + 1) {
+                    /* Insert new currency */
+                    menuTop("Insert Currency");
+                    System.out.printf("Insert the currency string : ");
+                    GlobalEnvironmentVariable.db.insertIntoCurrency(ScannerInput.scanInput().trim());
+                    throw new Exception();
+                } else if (selection == currencyList.size() + 2) {
+                    /* Delete a currency */
+                    System.out.println("Select transaction to delete. Cannot delete current wallet.");
+                    int deleteCurrency = Integer.parseInt(ScannerInput.scanInput().trim());
+                    if (deleteCurrency <= currencyList.size() || deleteCurrency == 0) {
+                        System.out.println(
+                                "Warning, this can't be undone. Type \"yes/y\" to continue.");
+                        String confirmation = ScannerInput.scanInput();
+                        if (confirmation.equalsIgnoreCase("yes") || confirmation.equalsIgnoreCase("y")) {
+                            if (!GlobalEnvironmentVariable.currency.equals(currencyList.get(deleteCurrency - 1))) {
+                                GlobalEnvironmentVariable.db
+                                        .deleteCurrencyFromName(currencyList.get(deleteCurrency - 1));
+                            }
+                            throw new Exception();
+                        }
+                    }
+                    throw new Exception();
+                }
+                break;
+            } catch (StopArgumentException e) {
+                break;
+            } catch (FinishArgumentException e) {
+                throw e;
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    /**
+     * This static method is responsible for the menu of
+     * [ 5 ] Update wallet balance
+     * 
+     * It shows the current currency mode in the system according to
+     * GlobalEnvironmentCurrency.
+     * It will offer the choices of
+     * [ 0 ] Quit
+     * [ 1 ] <walletName> : <amount> (Last updated: <date>)
+     * .
+     * [ i ] <walletName> : <amount> (Last updated: <date>)
+     * [ i+1 ] Insert new wallet
+     * [ i+2 ] Delete wallet
+     * By checking all the wallet in the database according to the currency and
+     * create it as choices.
+     * 
+     * @throws FinishArgumentException
+     */
     public static void updateWalletBalance() throws FinishArgumentException {
         while (true) {
             try {
@@ -118,49 +336,33 @@ public interface Menus {
         }
     }
 
-    public static void getCurrentMonthTransaction(Database db) throws FinishArgumentException {
-        while (true) {
-            try {
-                menuTop("Show transaction");
-
-                System.out.println("Show transactions from");
-                System.out.printf("%sQuit\n", selectionColor(0));
-                System.out.printf("%sThis month\n", selectionColor(1));
-                System.out.printf("%sLast month\n", selectionColor(2));
-                System.out.printf("%sNext month\n", selectionColor(3));
-                System.out.printf("%sInput my own year-month\n", selectionColor(4));
-
-                String input = ScannerInput.scanInput();
-                switch (Integer.parseInt(input.trim())) {
-                    case 0:
-                        throw new StopArgumentException("Stop");
-                    case 1:
-                        printTransactionsByMonth(
-                                Sanitizer.getYearMonth(GlobalEnvironmentVariable.getDateToday()));
-                        break;
-                    case 2:
-                        printTransactionsByMonth(Sanitizer.getYearMonth(GlobalEnvironmentVariable.getDateToday(), -1));
-
-                        break;
-                    case 3:
-                        printTransactionsByMonth(Sanitizer.getYearMonth(GlobalEnvironmentVariable.getDateToday(), 1));
-                        break;
-                    case 4:
-                        printTransactionsByMonth(
-                                String.join("-", Sanitizer.splitIntoArray(ScannerInput.scanInput(), "/")));
-                        break;
-                    default:
-                        break;
-                }
-            } catch (StopArgumentException e) {
-                break;
-            } catch (FinishArgumentException e) {
-                throw e;
-            } catch (Exception e) {
-            }
-        }
-    }
-
+    /**
+     * This static method is respobonsible to display all the transaction, the
+     * amount in the wallet, and the prediction of the spending by accessing all
+     * relevant information in the database.
+     * 
+     * It will show the date of the transaction list, and show the start of the
+     * month wallet balance and latest balance of the month.
+     * 
+     * It will also count all the income and spending and then make prediction by
+     * calculating <allWalletCurrent> + <UnpaidTransaction>
+     * It will then queury all of the transaction available at the month and
+     * segregate it into.
+     * ------------Critical Unpaid, Result i transactions
+     * ------------Critical Paid, Result i transactions
+     * ------------Not-Critical Unpaid, Result i transactions
+     * ------------Not-Critical Paid, Result i transactions
+     * 
+     * At the end the user can either change the value of a transaction
+     * by calling changeTransaction() method
+     * in the given
+     * menu or go back to choose other yearMonth.
+     * 
+     * @param yearMonth
+     * @throws StopArgumentException
+     * @throws FinishArgumentException
+     * @throws Exception
+     */
     public static void printTransactionsByMonth(String yearMonth)
             throws StopArgumentException, FinishArgumentException, Exception {
         ArrayList<Transaction> results = GlobalEnvironmentVariable.db.getTransactionFromYearMonth(yearMonth);
@@ -261,6 +463,12 @@ public interface Menus {
         }
     }
 
+    /**
+     * This static method recieves all the results of the transaction that has been
+     * query from the database and print the category and the total amount.
+     * 
+     * @param results
+     */
     public static void showTransactionByCategory(ArrayList<Transaction> results) {
         HashMap<String, Integer> categories = new HashMap<>();
         for (Transaction transaction : results) {
@@ -274,14 +482,15 @@ public interface Menus {
         }
     }
 
-    public static String selectionColor(String selection) {
-        return ConsoleColors.CYAN_BACKGROUND_BRIGHT + "[ " + selection + " ]" + ConsoleColors.RESET + " ";
-    }
-
-    public static String selectionColor(int selection) {
-        return selectionColor(String.format("%s", selection));
-    }
-
+    /**
+     * This static method will print out all the transaction given in the arraylist
+     * as arguments. It will also accept integer count to specify the start of the
+     * selection number.
+     * 
+     * @param transactions
+     * @param count
+     * @throws SQLException
+     */
     public static void printTransactionsByField(ArrayList<Transaction> transactions, int count) throws SQLException {
         System.out.println("Result " + transactions.size() + " transactions");
         Integer totalAmount = 0;
@@ -295,6 +504,24 @@ public interface Menus {
         System.out.println("Total is " + totalAmount);
     }
 
+    /**
+     * This method is responsible for changing transaction.
+     * It will show the selected transaction and ask the user from the menus of
+     * [ 0 ] Cancel
+     * [ 1 ] Change criticallity
+     * [ 2 ] Change paid
+     * [ 3 ] Delete transaction
+     * 
+     * Changing criticallity will call the method in the database object to change
+     * the criticallity in the database. changeTransactionBooleanField()
+     * Changing paid status will call the method in the database object to change
+     * the paid status in the database. changeTransactionBooleanField()
+     * Deleting will ask user for confirmation and call method in the database objet
+     * to delete. deleteTransactionFromId()
+     * 
+     * @param transaction
+     * @throws FinishArgumentException
+     */
     public static void changeTransaction(Transaction transaction) throws FinishArgumentException {
         while (true) {
             try {
@@ -341,60 +568,17 @@ public interface Menus {
         }
     }
 
-    public static void changeGlobalEnvironmentCurrency() throws FinishArgumentException {
-        while (true) {
-            try {
-                menuTop("Change Currency");
-
-                System.out.println("SELECT TO CHANGE CURRENCY");
-                System.out.printf("%sQuit\n", selectionColor(0));
-                ArrayList<String> currencyList = Currency.getCurrencyList();
-                for (int i = 0; i < currencyList.size(); i++) {
-                    System.out.printf("%s%s\n", selectionColor(i + 1), currencyList.get(i));
-                }
-                System.out.printf("%sInsert new currency\n", selectionColor(currencyList.size() + 1));
-                System.out.printf("%sDelete a currency\n", selectionColor(currencyList.size() + 2));
-
-                int selection = Integer.parseInt(ScannerInput.scanInput().trim());
-                if (selection == 0) {
-                    throw new StopArgumentException("quit");
-                }
-                if (selection <= currencyList.size()) {
-                    GlobalEnvironmentVariable.currency = currencyList.get(selection - 1);
-                } else if (selection == currencyList.size() + 1) {
-                    // Insert new currency
-                    menuTop("Insert Currency");
-                    System.out.printf("Insert the currency string : ");
-                    GlobalEnvironmentVariable.db.insertIntoCurrency(ScannerInput.scanInput().trim());
-                    throw new Exception();
-                } else if (selection == currencyList.size() + 2) {
-                    // Delete a currency
-                    System.out.println("Select transaction to delete. Cannot delete current wallet.");
-                    int deleteCurrency = Integer.parseInt(ScannerInput.scanInput().trim());
-                    if (deleteCurrency <= currencyList.size() || deleteCurrency == 0) {
-                        System.out.println(
-                                "Warning, this can't be undone. Type \"yes/y\" to continue.");
-                        String confirmation = ScannerInput.scanInput();
-                        if (confirmation.equalsIgnoreCase("yes") || confirmation.equalsIgnoreCase("y")) {
-                            if (!GlobalEnvironmentVariable.currency.equals(currencyList.get(deleteCurrency - 1))) {
-                                GlobalEnvironmentVariable.db
-                                        .deleteCurrencyFromName(currencyList.get(deleteCurrency - 1));
-                            }
-                            throw new Exception();
-                        }
-                    }
-                    throw new Exception();
-                }
-                break;
-            } catch (StopArgumentException e) {
-                break;
-            } catch (FinishArgumentException e) {
-                throw e;
-            } catch (Exception e) {
-            }
-        }
-    }
-
+    /**
+     * This method is responsible for accepting user input of transactions.
+     * It will show how the syntax works and what acceptable input for the user.
+     * 
+     * If the input is acceptable, it will print out the transaction inputted into
+     * the database.
+     * 
+     * @param critical
+     * @param paid
+     * @throws FinishArgumentException
+     */
     public static void inputTransactionIntoDatabase(Boolean critical, Boolean paid)
             throws FinishArgumentException {
         String optional = ConsoleColors.BLACK_BACKGROUND_BRIGHT + ConsoleColors.BLACK_BOLD;

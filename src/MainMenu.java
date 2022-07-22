@@ -10,6 +10,8 @@ public interface MainMenu extends Menus {
     /**
      * This static method is the main menu where all of the interface in the comman
      * line is controlled by this method.
+     * 
+     * This will create these selection with this method.
      * [ 0 ] Quit application
      * [ 1 ] Input paid transaction into the database
      * [ 2 ] Input unpaid transaction into the database
@@ -17,6 +19,8 @@ public interface MainMenu extends Menus {
      * [ 4 ] Change the currency mode
      * [ 5 ] Update wallet balance
      * 
+     * It also at any time accepts the input --stop and --finish to stop the
+     * program.
      * 
      * @param db
      */
