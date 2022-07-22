@@ -1,5 +1,7 @@
 # Personal Finance
 
+    DON'T FORGET TO CHANGE THE PATH IN THE GLOBALENVIRONMENTVARIABLE.JAVA BEFORE RUNNING THE PROGRAM
+
 Personal Finance is a CRUD (Create-Read-Update-Delete) application with Command Line-based Interface to help you keep tracking your spending. The application features
 
 -   <b>Multiple currencies</b> support as many as the user can add, even custom currencies.
