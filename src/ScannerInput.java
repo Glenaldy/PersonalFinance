@@ -5,7 +5,7 @@ import java.util.Scanner;
 import CustomException.FinishArgumentException;
 import CustomException.StopArgumentException;
 
-public class ScannerInput extends Sanitizer {
+public class ScannerInput {
     private static Scanner scannerObj = new Scanner(System.in);
     private final static String[] KEYWORD = { "--stop", "--finish" };
 
@@ -48,11 +48,11 @@ public class ScannerInput extends Sanitizer {
 
     public static ArrayList<Transaction> parentChildInput(String[][] parentChild) {
         ArrayList<Transaction> transactions = new ArrayList<>();
-        Transaction parent = sanitizeInputArrayIntoTransaction(parentChild[0]);
+        Transaction parent = Sanitizer.sanitizeInputArrayIntoTransaction(parentChild[0]);
         transactions.add(parent);
         for (int i = 1; i < parentChild.length; i++) {
 
-            transactions.add(sanitizeInputArrayIntoTransaction(parentChild[i]));
+            transactions.add(Sanitizer.sanitizeInputArrayIntoTransaction(parentChild[i]));
         }
         return transactions;
     }

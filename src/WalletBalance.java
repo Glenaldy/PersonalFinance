@@ -1,3 +1,7 @@
+/**
+ * Wallet Balance stores the balance of the wallet and the recordDate
+ */
+
 public class WalletBalance {
     private Integer id;
     private String walletName;

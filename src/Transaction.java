@@ -1,7 +1,9 @@
-import java.lang.invoke.SwitchPoint;
 import java.util.ArrayList;
-import java.util.Set;
 
+/**
+ * Transaction class stores the transaction either from other method or from
+ * database query that will store all of the information needed.
+ */
 public class Transaction {
     private Integer id,
             amount,
@@ -12,6 +14,20 @@ public class Transaction {
             transDate;
     private Boolean critical, paid;
 
+    /**
+     * Transaction object constructor that will create the object according tot he
+     * parameter given.
+     * 
+     * @param id
+     * @param currency
+     * @param amount
+     * @param category
+     * @param description
+     * @param transDate
+     * @param superId
+     * @param critical
+     * @param paid
+     */
     public Transaction(Integer id, String currency, Integer amount, String category, String description,
             String transDate, Integer superId, Boolean critical, Boolean paid) {
         this.id = id;
@@ -25,6 +41,19 @@ public class Transaction {
         this.paid = paid;
     }
 
+    /**
+     * Static method that accepts argument of ArrayList of Transaction objects and
+     * the argument to change the mode.
+     * There are 4 modes, critical, paid, not critical, and not paid.
+     * It will loop through the ArrayList and check the critical and paid variable
+     * inside.
+     * Appropriate transactions will be returned as a new ArrayList.
+     * 
+     * @param transactions
+     * @param argument
+     * @return ArrayList of Transaction objects that's already sorted according to
+     *         the critical and paid field.
+     */
     public static ArrayList<Transaction> searchByField(ArrayList<Transaction> transactions, String argument) {
         ArrayList<Transaction> output = new ArrayList<>();
         for (Transaction transaction : transactions) {
