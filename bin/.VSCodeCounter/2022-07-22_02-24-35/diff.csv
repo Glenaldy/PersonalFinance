@@ -1,0 +1,17 @@
+"filename", "language", "Java", "Database", "Markdown", "CSV", "JSON", "comment", "blank", "total"
+"d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\MainMenu.java", "Java", 6, 0, 0, 0, 0, -12, -2, -8
+"d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\.VSCodeCounter\2022-07-22_00-35-26\details.md", "Markdown", 0, 0, 49, 0, 0, 0, 6, 55
+"d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\.VSCodeCounter\2022-07-22_00-35-26\diff-details.md", "Markdown", 0, 0, 9, 0, 0, 0, 6, 15
+"d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\.VSCodeCounter\2022-07-22_00-35-26\diff.csv", "CSV", 0, 0, 0, 2, 0, 0, 0, 2
+"d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\.VSCodeCounter\2022-07-22_00-35-26\diff.md", "Markdown", 0, 0, 12, 0, 0, 0, 7, 19
+"d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\.VSCodeCounter\2022-07-22_00-35-26\results.csv", "CSV", 0, 0, 0, 42, 0, 0, 0, 42
+"d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\.VSCodeCounter\2022-07-22_00-35-26\results.json", "JSON", 0, 0, 0, 0, 1, 0, 0, 1
+"d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\.VSCodeCounter\2022-07-22_00-35-26\results.md", "Markdown", 0, 0, 23, 0, 0, 0, 7, 30
+"d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\Database.class", "Java", 6, 0, 0, 0, 0, -4, 0, 2
+"d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\MainMenu.class", "Java", 6, 0, 0, 0, 0, 0, -1, 5
+"d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\TransactionPrinter.class", "Java", 4, 0, 0, 0, 0, 0, 0, 4
+"d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\database\personalfinance.db", "Database", 0, 0, 0, 0, 0, 0, -1, -1
+"d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\database\personalfinance.db", "Database", 0, 0, 0, 0, 0, 0, -1, -1
+"d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\src\Database.java", "Java", 29, 0, 0, 0, 0, -63, -10, -44
+"d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\src\TransactionPrinter.java", "Java", 5, 0, 0, 0, 0, 0, -1, 4
+"Total", "-", 56, 0, 93, 44, 1, -79, 10, 125

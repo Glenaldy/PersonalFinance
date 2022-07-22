@@ -1,5 +1,7 @@
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 public class Sanitizer {
@@ -165,5 +167,27 @@ public class Sanitizer {
         Transaction transaction = new Transaction(id, currency, amount, category, description, transDate, superId,
                 critical, paid);
         return transaction;
+    }
+
+    public static String getYearMonth(String date, int monthModifier) {
+        SimpleDateFormat dashDate = new SimpleDateFormat("yyyy-MM-dd");
+        Date convert;
+        try {
+            convert = dashDate.parse(date);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(convert);
+
+            String year = String.valueOf(cal.get(Calendar.YEAR));
+            String month = (cal.get(Calendar.MONTH) + 1) < 10
+                    ? 0 + String.valueOf(cal.get(Calendar.MONTH) + 1 + monthModifier)
+                    : String.valueOf(cal.get(Calendar.MONTH) + 1 + monthModifier);
+            return String.format("%s-%s", year, month);
+        } catch (ParseException e) {
+            return null;
+        }
+    }
+
+    public static String getYearMonth(String date) {
+        return getYearMonth(date, 0);
     }
 }

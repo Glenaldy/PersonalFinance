@@ -13,42 +13,20 @@ public class GlobalEnvironmentVariable {
     private static String databaseURL = jdbcUrl + "/" + PATH + "/" + database;
 
     public static Database db;
+    public static String currency;
+    public static String currencyList;
 
     static {
         try {
             db = new Database(databaseURL, PATH);
+            currency = db.getCurrencyList().get(0).getCurrencyName();
         } catch (Exception e) {
             System.out.println("CANNOT GET THE DATABASE");
         }
     }
 
-    static String currency = "yen";
-    static String currencyList;
-
     public static String getDateToday() {
         return DateTimeFormatter.ofPattern("yyyy-MM-dd").format(LocalDate.now()).toString();
-    }
-
-    public static String getYearMonth(String date, int monthModifier) {
-        SimpleDateFormat dashDate = new SimpleDateFormat("yyyy-MM-dd");
-        Date convert;
-        try {
-            convert = dashDate.parse(date);
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(convert);
-
-            String year = String.valueOf(cal.get(Calendar.YEAR));
-            String month = (cal.get(Calendar.MONTH) + 1) < 10
-                    ? 0 + String.valueOf(cal.get(Calendar.MONTH) + 1 + monthModifier)
-                    : String.valueOf(cal.get(Calendar.MONTH) + 1 + monthModifier);
-            return String.format("%s-%s", year, month);
-        } catch (ParseException e) {
-            return null;
-        }
-    }
-
-    public static String getYearMonth(String date) {
-        return getYearMonth(date, 0);
     }
 
 }

@@ -9,11 +9,11 @@ public class ScannerInput extends Sanitizer {
     private static Scanner scannerObj = new Scanner(System.in);
     private final static String[] KEYWORD = { "--stop", "--finish" };
 
-    public static Transaction getInputTransactionPushDB(Database db) throws Exception {
+    public static ArrayList<Transaction> getInputTransaction(Database db) throws Exception {
         while (true) {
             try {
                 String userInput = (ScannerInput.scanInput());
-                Transaction result = db.insertTransaction(Sanitizer.dirtyArrayToTransactionList(userInput));
+                ArrayList<Transaction> result = Sanitizer.dirtyArrayToTransactionList(userInput);
                 return result;
             } catch (Exception e) {
                 throw e;

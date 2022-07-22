@@ -9,6 +9,7 @@ public interface TransactionPrinter {
             critical = "";
             paid = "";
         }
+
         String printing = String.format(
                 "%s, %d, %s, %s%s%s\n",
                 transaction.getTransDate(),

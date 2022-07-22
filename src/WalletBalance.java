@@ -1,20 +1,20 @@
 public class WalletBalance {
     private Integer id;
     private String walletName;
-    private Integer latestAmount;
-    private String latestRecord;
+    private Integer amount;
+    private String recordDate;
 
     /**
      * @param id
      * @param walletName
-     * @param latestAmount
-     * @param latestRecord
+     * @param amount
+     * @param recordDate
      */
-    public WalletBalance(Integer id, String walletName, Integer latestAmount, String latestRecord) {
+    public WalletBalance(Integer id, String walletName, Integer amount, String recordDate) {
         this.id = id;
         this.walletName = walletName;
-        this.latestAmount = latestAmount;
-        this.latestRecord = latestRecord;
+        this.amount = amount;
+        this.recordDate = recordDate;
     }
 
     /**
@@ -32,16 +32,16 @@ public class WalletBalance {
     }
 
     /**
-     * @return the latestAmount
+     * @return the amount
      */
-    public Integer getLatestAmount() {
-        return latestAmount;
+    public Integer getAmount() {
+        return amount;
     }
 
     /**
-     * @return the latestRecord
+     * @return the recordDate
      */
-    public String getLatestRecord() {
-        return latestRecord;
+    public String getRecordDate() {
+        return recordDate;
     }
 }

@@ -1,5 +1,7 @@
 
 import java.util.ArrayList;
+import java.util.HashSet;
+
 import CustomException.FinishArgumentException;
 import CustomException.StopArgumentException;
 
@@ -16,13 +18,16 @@ public class Database {
         createOpenDB(connection, statement, path);
     }
 
-    public ArrayList<Transaction> getTransactionFromYearMonth(String yearMonth) throws SQLException {
+    public ArrayList<Transaction> getTransactionFromYearMonth(String yearMonth, Boolean critical, Boolean paid)
+            throws SQLException {
         ArrayList<Transaction> transactions = new ArrayList<>();
-        String sql = "SELECT * FROM transactions WHERE strftime('%Y-%m', trans_date) = ? AND currency = ? AND parent_id IS NULL;";
+        String sql = "SELECT * FROM transactions WHERE strftime('%Y-%m', trans_date) = ? AND currency = ? AND parent_id IS NULL AND critical = ? AND paid = ?;";
 
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.setString(1, yearMonth);
         statement.setString(2, GlobalEnvironmentVariable.currency);
+        statement.setBoolean(3, critical);
+        statement.setBoolean(4, paid);
         ResultSet result = statement.executeQuery();
 
         while (result.next()) {
@@ -31,6 +36,15 @@ public class Database {
         }
 
         return transactions;
+    }
+
+    public ArrayList<Transaction> getTransactionFromYearMonth(String yearMonth) throws SQLException {
+        ArrayList<Transaction> output = new ArrayList<>();
+        output.addAll(getTransactionFromYearMonth(yearMonth, true, true));
+        output.addAll(getTransactionFromYearMonth(yearMonth, false, true));
+        output.addAll(getTransactionFromYearMonth(yearMonth, true, false));
+        output.addAll(getTransactionFromYearMonth(yearMonth, false, false));
+        return output;
     }
 
     public void updateWalletBalance(Integer id, Integer updateAmount, String date) throws SQLException {
@@ -59,6 +73,26 @@ public class Database {
         }
     }
 
+    public void insertWallet(String newWallet) throws SQLException {
+        String sql = "INSERT INTO wallets (currency, wallet_name) VALUES (?, ?);";
+        PreparedStatement statement = connection.prepareStatement(sql,
+                Statement.RETURN_GENERATED_KEYS);
+        statement.setString(1, GlobalEnvironmentVariable.currency);
+        statement.setString(2, newWallet);
+        statement.execute();
+        ResultSet result = statement.getGeneratedKeys();
+        if (result.next()) {
+            updateWalletBalance(result.getInt(1), 0, GlobalEnvironmentVariable.getDateToday());
+        }
+    }
+
+    public void deleteWallet(Integer id) throws SQLException {
+        String sql = "DELETE FROM wallets WHERE id = ?;";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setInt(1, id);
+        statement.execute();
+    }
+
     public void changeTransactionBooleanField(Transaction transaction, String field) throws SQLException {
         String sql;
         Boolean bool;
@@ -82,12 +116,17 @@ public class Database {
         statement.executeUpdate();
     }
 
-    public ArrayList<WalletBalance> getLatestWalletBalance() throws SQLException {
-        String sql = "SELECT wallets.id, wallets.wallet_name, wallet_balance.amount, wallet_balance.record_date FROM wallet_balance JOIN wallets ON wallet_balance.record_wallet = wallets.id WHERE wallets.currency = ? AND record_date = (SELECT max(record_date) FROM wallet_balance AS latest WHERE strftime('%Y-%m', record_date) = ? AND wallets.id = latest.record_wallet);";
+    public ArrayList<WalletBalance> getWalletBalance(Boolean latest) throws SQLException {
+        String sql;
+        if (latest) {
+            sql = "SELECT wallets.id, wallets.wallet_name, wallet_balance.amount, wallet_balance.record_date FROM wallet_balance JOIN wallets ON wallet_balance.record_wallet = wallets.id WHERE wallets.currency = ? AND record_date = (SELECT max(record_date) FROM wallet_balance AS latest WHERE strftime('%Y-%m', record_date) = ? AND wallets.id = latest.record_wallet);";
+        } else {
+            sql = "SELECT wallets.id, wallets.wallet_name, wallet_balance.amount, wallet_balance.record_date FROM wallet_balance JOIN wallets ON wallet_balance.record_wallet = wallets.id WHERE wallets.currency = ? AND record_date = (SELECT min(record_date) FROM wallet_balance AS latest WHERE strftime('%Y-%m', record_date) = ? AND wallets.id = latest.record_wallet);";
+        }
 
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.setString(1, GlobalEnvironmentVariable.currency);
-        statement.setString(2, GlobalEnvironmentVariable.getYearMonth(GlobalEnvironmentVariable.getDateToday()));
+        statement.setString(2, Sanitizer.getYearMonth(GlobalEnvironmentVariable.getDateToday()));
 
         ResultSet result = statement.executeQuery();
         ArrayList<WalletBalance> walletBalances = new ArrayList<>();
@@ -99,8 +138,19 @@ public class Database {
                     result.getString("record_date"));
             walletBalances.add(walletBalance);
         }
-
         return walletBalances;
+    }
+
+    public HashSet<String> getAllCategory() throws SQLException {
+        HashSet<String> output = new HashSet<>();
+        String sql = "SELECT DISTINCT transactions.category FROM transactions;";
+        PreparedStatement statement = connection.prepareStatement(sql);
+
+        ResultSet result = statement.executeQuery();
+        while (result.next()) {
+            output.add(result.getString("category"));
+        }
+        return output;
     }
 
     public ArrayList<Wallet> getWalletList(String currency) throws SQLException {
@@ -121,10 +171,11 @@ public class Database {
     }
 
     public void insertIntoCurrency(String currency) throws SQLException {
+        System.out.println(currency);
         String sql = "INSERT INTO currency (currency_name) VALUES(?)";
-        PreparedStatement prepSql = connection.prepareStatement(sql);
-        prepSql.setString(1, currency);
-        prepSql.executeUpdate();
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setString(1, currency);
+        statement.executeUpdate();
     }
 
     public ArrayList<Currency> getCurrencyList() throws SQLException {
@@ -146,7 +197,7 @@ public class Database {
                 "INSERT INTO %s (currency, amount, category, description, trans_date, parent_id, critical, paid) VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
                 table);
 
-        PreparedStatement prepSql = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
         Integer amount = transaction.getAmount(),
                 superId = transaction.getSuperId();
@@ -158,19 +209,19 @@ public class Database {
                 paid = transaction.getPaid();
 
         if (superId != null)
-            prepSql.setInt(6, transaction.getSuperId());
+            statement.setInt(6, transaction.getSuperId());
         else
-            prepSql.setNull(6, Types.INTEGER);
+            statement.setNull(6, Types.INTEGER);
 
-        prepSql.setString(1, currency);
-        prepSql.setInt(2, amount);
-        prepSql.setString(3, category);
-        prepSql.setString(4, description);
-        prepSql.setString(5, transDate);
-        prepSql.setBoolean(7, critical);
-        prepSql.setBoolean(8, paid);
+        statement.setString(1, currency);
+        statement.setInt(2, amount);
+        statement.setString(3, category);
+        statement.setString(4, description);
+        statement.setString(5, transDate);
+        statement.setBoolean(7, critical);
+        statement.setBoolean(8, paid);
 
-        if (prepSql.executeUpdate() == 0) {
+        if (statement.executeUpdate() == 0) {
             throw new SQLException("Inserting transaction failed.");
         }
 
@@ -204,10 +255,17 @@ public class Database {
         }
     }
 
-    public void deleteTransactionFromId(int id) throws StopArgumentException, FinishArgumentException, Exception {
+    public void deleteTransactionFromId(int id) throws SQLException {
         String sql = "DELETE FROM transactions WHERE transactions.id = ?;";
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.setInt(1, id);
+        statement.executeUpdate();
+    }
+
+    public void deleteCurrencyFromName(String string) throws StopArgumentException, FinishArgumentException, Exception {
+        String sql = "DELETE FROM currency WHERE currency_name = ?;";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setString(1, string);
         statement.executeUpdate();
     }
 

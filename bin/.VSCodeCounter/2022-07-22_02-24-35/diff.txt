@@ -1,0 +1,49 @@
+Date : 2022-07-22 02:24:35
+Directory : d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance
+Total : 15 files,  194 codes, -79 comments, 10 blanks, all 125 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| Markdown |          4 |         93 |          0 |         26 |        119 |
+| Java     |          6 |         56 |        -79 |        -14 |        -37 |
+| CSV      |          2 |         44 |          0 |          0 |         44 |
+| JSON     |          1 |          1 |          0 |          0 |          1 |
+| Database |          2 |          0 |          0 |         -2 |         -2 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                                                                                     | files      | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                                                                                        |         15 |        194 |        -79 |         10 |        125 |
+| bin                                                                                                                                                                      |         11 |        154 |         -4 |         24 |        174 |
+| bin\.VSCodeCounter                                                                                                                                                       |          7 |        138 |          0 |         26 |        164 |
+| bin\.VSCodeCounter\2022-07-22_00-35-26                                                                                                                                   |          7 |        138 |          0 |         26 |        164 |
+| bin\database                                                                                                                                                             |          1 |          0 |          0 |         -1 |         -1 |
+| database                                                                                                                                                                 |          1 |          0 |          0 |         -1 |         -1 |
+| src                                                                                                                                                                      |          2 |         34 |        -63 |        -11 |        -40 |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                                                                                                                                 | language | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\MainMenu.java                                          | Java     |          6 |        -12 |         -2 |         -8 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\.VSCodeCounter\2022-07-22_00-35-26\details.md      | Markdown |         49 |          0 |          6 |         55 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\.VSCodeCounter\2022-07-22_00-35-26\diff-details.md | Markdown |          9 |          0 |          6 |         15 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\.VSCodeCounter\2022-07-22_00-35-26\diff.csv        | CSV      |          2 |          0 |          0 |          2 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\.VSCodeCounter\2022-07-22_00-35-26\diff.md         | Markdown |         12 |          0 |          7 |         19 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\.VSCodeCounter\2022-07-22_00-35-26\results.csv     | CSV      |         42 |          0 |          0 |         42 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\.VSCodeCounter\2022-07-22_00-35-26\results.json    | JSON     |          1 |          0 |          0 |          1 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\.VSCodeCounter\2022-07-22_00-35-26\results.md      | Markdown |         23 |          0 |          7 |         30 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\Database.class                                     | Java     |          6 |         -4 |          0 |          2 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\MainMenu.class                                     | Java     |          6 |          0 |         -1 |          5 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\TransactionPrinter.class                           | Java     |          4 |          0 |          0 |          4 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\database\personalfinance.db                        | Database |          0 |          0 |         -1 |         -1 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\database\personalfinance.db                            | Database |          0 |          0 |         -1 |         -1 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\src\Database.java                                      | Java     |         29 |        -63 |        -10 |        -44 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\src\TransactionPrinter.java                            | Java     |          5 |          0 |         -1 |          4 |
+| Total                                                                                                                                                                    |          |        194 |        -79 |         10 |        125 |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+

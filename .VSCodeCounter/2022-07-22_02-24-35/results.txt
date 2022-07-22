@@ -1,0 +1,84 @@
+Date : 2022-07-22 02:24:35
+Directory : d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance
+Total : 47 files,  2231 codes, 107 comments, 313 blanks, all 2651 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| Java     |         32 |      1,647 |        107 |        213 |      1,967 |
+| SQLite   |          4 |        366 |          0 |         54 |        420 |
+| Markdown |          6 |        113 |          0 |         44 |        157 |
+| Database |          2 |         60 |          0 |          2 |         62 |
+| CSV      |          2 |         44 |          0 |          0 |         44 |
+| JSON     |          1 |          1 |          0 |          0 |          1 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                                                                                     | files      | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                                                                                        |         47 |      2,231 |        107 |        313 |      2,651 |
+| bin                                                                                                                                                                      |         27 |        920 |          0 |         76 |        996 |
+| bin\.VSCodeCounter                                                                                                                                                       |          7 |        138 |          0 |         26 |        164 |
+| bin\.VSCodeCounter\2022-07-22_00-35-26                                                                                                                                   |          7 |        138 |          0 |         26 |        164 |
+| bin\CustomException                                                                                                                                                      |          2 |         12 |          0 |          0 |         12 |
+| bin\database                                                                                                                                                             |          3 |        213 |          0 |         28 |        241 |
+| database                                                                                                                                                                 |          3 |        213 |          0 |         28 |        241 |
+| src                                                                                                                                                                      |         13 |        761 |        102 |        151 |      1,014 |
+| src\CustomException                                                                                                                                                      |          2 |         12 |          0 |          3 |         15 |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                                                                                                                                 | language | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\App.java                                               | Java     |          5 |          0 |          2 |          7 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\MainMenu.java                                          | Java     |        319 |          5 |         45 |        369 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\Menu.java                                              | Java     |          3 |          0 |          2 |          5 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\README.md                                              | Markdown |         10 |          0 |          9 |         19 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\.VSCodeCounter\2022-07-22_00-35-26\details.md      | Markdown |         49 |          0 |          6 |         55 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\.VSCodeCounter\2022-07-22_00-35-26\diff-details.md | Markdown |          9 |          0 |          6 |         15 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\.VSCodeCounter\2022-07-22_00-35-26\diff.csv        | CSV      |          2 |          0 |          0 |          2 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\.VSCodeCounter\2022-07-22_00-35-26\diff.md         | Markdown |         12 |          0 |          7 |         19 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\.VSCodeCounter\2022-07-22_00-35-26\results.csv     | CSV      |         42 |          0 |          0 |         42 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\.VSCodeCounter\2022-07-22_00-35-26\results.json    | JSON     |          1 |          0 |          0 |          1 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\.VSCodeCounter\2022-07-22_00-35-26\results.md      | Markdown |         23 |          0 |          7 |         30 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\App.class                                          | Java     |         11 |          0 |          0 |         11 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\ConsoleColors.class                                | Java     |         13 |          0 |          0 |         13 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\Currency.class                                     | Java     |         19 |          0 |          0 |         19 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\CustomException\FinishArgumentException.class      | Java     |          6 |          0 |          0 |          6 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\CustomException\StopArgumentException.class        | Java     |          6 |          0 |          0 |          6 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\Database.class                                     | Java     |        105 |          0 |          2 |        107 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\GlobalEnvironmentVariable.class                    | Java     |         39 |          0 |          0 |         39 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\MainMenu.class                                     | Java     |        133 |          0 |          9 |        142 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\Menu.class                                         | Java     |          2 |          0 |          0 |          2 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\README.md                                          | Markdown |         10 |          0 |          9 |         19 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\Sanitizer.class                                    | Java     |         58 |          0 |          0 |         58 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\ScannerInput.class                                 | Java     |         40 |          0 |          1 |         41 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\ScriptRunner.class                                 | Java     |         23 |          0 |          0 |         23 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\Transaction.class                                  | Java     |         38 |          0 |          0 |         38 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\TransactionPrinter.class                           | Java     |         35 |          0 |          1 |         36 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\Wallet.class                                       | Java     |         16 |          0 |          0 |         16 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\WalletBalance.class                                | Java     |         15 |          0 |          0 |         15 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\database\initialExecution.sql                      | SQLite   |        150 |          0 |         15 |        165 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\database\personalfinance.db                        | Database |         30 |          0 |          1 |         31 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\bin\database\selectQuery.sql                           | SQLite   |         33 |          0 |         12 |         45 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\database\initialExecution.sql                          | SQLite   |        150 |          0 |         15 |        165 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\database\personalfinance.db                            | Database |         30 |          0 |          1 |         31 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\database\selectQuery.sql                               | SQLite   |         33 |          0 |         12 |         45 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\src\ConsoleColors.java                                 | Java     |         59 |          8 |          7 |         74 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\src\Currency.java                                      | Java     |         31 |          0 |          8 |         39 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\src\CustomException\FinishArgumentException.java       | Java     |          6 |          0 |          1 |          7 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\src\CustomException\StopArgumentException.java         | Java     |          6 |          0 |          2 |          8 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\src\Database.java                                      | Java     |        239 |          0 |         47 |        286 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\src\GlobalEnvironmentVariable.java                     | Java     |         44 |          0 |         11 |         55 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\src\Sanitizer.java                                     | Java     |        126 |         22 |         22 |        170 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\src\ScannerInput.java                                  | Java     |         53 |          0 |          7 |         60 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\src\ScriptRunner.java                                  | Java     |         24 |          0 |          2 |         26 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\src\Transaction.java                                   | Java     |         76 |         54 |         21 |        151 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\src\TransactionPrinter.java                            | Java     |         44 |          0 |         10 |         54 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\src\Wallet.java                                        | Java     |         29 |          0 |          7 |         36 |
+| d:\School\1_KCGI\2022 Spring\Object Oriented Programming\Programming\jp\kcgi\twentytwo\spring\oop\PersonalFinance\src\WalletBalance.java                                 | Java     |         24 |         18 |          6 |         48 |
+| Total                                                                                                                                                                    |          |      2,231 |        107 |        313 |      2,651 |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+

@@ -21,7 +21,8 @@ CREATE TABLE transactions(
     parent_id INTEGER,
     critical BOOLEAN DEFAULT false,
     paid BOOLEAN DEFAULT true,
-    FOREIGN KEY (parent_id) REFERENCES transactions(id) ON DELETE CASCADE
+    FOREIGN KEY (parent_id) REFERENCES transactions(id) ON DELETE CASCADE,
+    FOREIGN KEY (currency) REFERENCES currency(currency_name) ON DELETE CASCADE
 );
 
 CREATE TABLE wallets(
@@ -36,7 +37,7 @@ CREATE TABLE wallet_balance(
     record_wallet ID,
     record_date DATE NOT NULL,
     amount INTEGER NOT NULL,
-    CONSTRAINT wallet_foreign_id FOREIGN KEY(record_wallet) REFERENCES wallets(id)
+    CONSTRAINT wallet_foreign_id FOREIGN KEY(record_wallet) REFERENCES wallets(id) ON DELETE CASCADE
 );
 
 INSERT INTO
@@ -89,7 +90,7 @@ VALUES
     (
         1,
         "yen",
-        5000,
+        -5000,
         "conbini",
         "parent transaction",
         "2022-07-18"
@@ -97,7 +98,7 @@ VALUES
     (
         2,
         "yen",
-        5000,
+        -5000,
         "another conbini",
         "parent transaction",
         "2022-06-18"
@@ -105,13 +106,54 @@ VALUES
     (
         3,
         "yen",
-        5000,
+        -5000,
         "another conbini",
         "parent transaction",
         "2022-08-18"
     );
 
-;
+INSERT INTO
+    transactions (
+        currency,
+        amount,
+        category,
+        description,
+        trans_date,
+        parent_id,
+        critical,
+        paid
+    )
+VALUES
+    (
+        "yen",
+        -40000,
+        "rent",
+        "August rent payment",
+        "2022-08-25",
+        null,
+        true,
+        false
+    ),
+    (
+        "yen",
+        -5000,
+        "electricity",
+        "August electricity payment",
+        "2022-08-25",
+        null,
+        true,
+        false
+    ),
+    (
+        "yen",
+        -3000,
+        "gas",
+        "August gas payment",
+        "2022-08-25",
+        null,
+        true,
+        false
+    );
 
 INSERT INTO
     transactions (
@@ -125,7 +167,7 @@ INSERT INTO
 VALUES
     (
         "yen",
-        1000,
+        -1000,
         "conbini",
         "child transaction",
         "2022-07-18",
@@ -133,7 +175,7 @@ VALUES
     ),
     (
         "yen",
-        1000,
+        -1000,
         "conbini",
         "child transaction",
         "2022-06-18",
@@ -141,7 +183,7 @@ VALUES
     ),
     (
         "yen",
-        1000,
+        -1000,
         "conbini",
         "child transaction",
         "2022-07-18",
@@ -149,7 +191,7 @@ VALUES
     ),
     (
         "yen",
-        1000,
+        -1000,
         "conbini",
         "child transaction",
         "2022-06-18",
@@ -157,7 +199,7 @@ VALUES
     ),
     (
         "yen",
-        1000,
+        -1000,
         "conbini",
         "child transaction",
         "2022-06-18",

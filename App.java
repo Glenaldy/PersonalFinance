@@ -4,3 +4,9 @@ public class App {
     }
 
 }
+
+// HashSet<String> categories = new HashSet<>();
+// for (Transaction transaction : results) {
+// categories.add(transaction.getCategory());
+// System.out.println(transaction.getCategory());
+// }

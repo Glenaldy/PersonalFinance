@@ -1,4 +1,8 @@
-class Transaction {
+import java.lang.invoke.SwitchPoint;
+import java.util.ArrayList;
+import java.util.Set;
+
+public class Transaction {
     private Integer id,
             amount,
             superId;
@@ -19,6 +23,33 @@ class Transaction {
         this.superId = superId;
         this.critical = critical;
         this.paid = paid;
+    }
+
+    public static ArrayList<Transaction> searchByField(ArrayList<Transaction> transactions, String argument) {
+        ArrayList<Transaction> output = new ArrayList<>();
+        for (Transaction transaction : transactions) {
+            switch (argument.toLowerCase()) {
+                case "critical":
+                    if (transaction.getCritical())
+                        output.add(transaction);
+                    break;
+                case "paid":
+                    if (transaction.getPaid())
+                        output.add(transaction);
+                    break;
+                case "notcritical":
+                    if (!transaction.getCritical())
+                        output.add(transaction);
+                    break;
+                case "notpaid":
+                    if (!transaction.getPaid())
+                        output.add(transaction);
+                    break;
+                default:
+                    break;
+            }
+        }
+        return output;
     }
 
     /**
